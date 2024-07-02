@@ -11,7 +11,7 @@ public static class SpawnAnimalScript // Animal
 	private static int[] animalClusterSize = new int[] { 5, 10}; // will spawn animal cluster in a range from x1 to x2 blocks
 	private static int spawningProcess = 0; // how much is left of spawning the animal cluster (0 is finished)
 	private static string spawningAnimal = null; // what animal we are spawning in the cluster
-	private static string[] animals = new string[] { "Sheep", "Pig", "Chicken" };
+	private static string[] animals = new string[] { "Sheep", "Pig", "Chicken", "Cow" };
 
 	//  this algorithm is used for when we are spawning in a new chunk 
 	public static object[] decideIfSpawnAnimal(float xPos, float yPos)

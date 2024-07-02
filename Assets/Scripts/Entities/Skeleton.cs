@@ -45,7 +45,7 @@ public class Skeleton : Mob
 
 	protected override void huntPlayer()
 	{
-		if (isDamageCoroutineRunning == false && canHurtPlayer()) //  && isGrounded()
+		if (isDamageCoroutineRunning == false && canHurtPlayer() && (isGrounded() || isSwimming))
 		{
 			damageCoroutine = StartCoroutine(damagePlayer());
 			anim.SetBool("isWalking", false);

@@ -85,7 +85,7 @@ public abstract class Entity : MonoBehaviour
 			else
 			{
 				isSwimming = true;
-				rb.AddForce(new Vector2(0, -5));
+				rb.AddForce(new Vector2(0, -7));
 			}
 		}
 		else // if entity is swimming
@@ -122,7 +122,7 @@ public abstract class Entity : MonoBehaviour
 		contactFilter.layerMask = LayerMask.GetMask("Water");
 		contactFilter.useLayerMask = true;
 
-		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y), 0.01f, contactFilter, results);
+		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y + 0.4f), 0.01f, contactFilter, results);
 		isSwimming = count > 0;
 		return isSwimming;
 	}
@@ -135,22 +135,10 @@ public abstract class Entity : MonoBehaviour
 		contactFilter.layerMask = LayerMask.GetMask("Water");
 		contactFilter.useLayerMask = true;
 
-		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y - 0.5f), 0.01f, contactFilter, results);
+		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y), 0.01f, contactFilter, results);
 		return count > 0;
 	}
 
-	protected bool isNoLongerInWater()
-	{
-		Collider2D[] results = new Collider2D[1];
-
-		ContactFilter2D contactFilter = new ContactFilter2D();
-		contactFilter.layerMask = LayerMask.GetMask("Water");
-		contactFilter.useLayerMask = true;
-
-		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y), 0.01f, contactFilter, results);
-		isSwimming = count > 0;
-		return isSwimming;
-	}
 
 
 
@@ -233,7 +221,16 @@ public abstract class Entity : MonoBehaviour
 		item.GetComponent<SpriteRenderer>().sprite = itemImage; // put the image on the SpriteRenderer
 
 		// maybe do some random point to spawn the item at?
-		Instantiate(itemContainer, new Vector2(transform.position.x, transform.position.y), itemContainer.transform.rotation); // spawn the item
+		GameObject itemInstance = Instantiate(itemContainer, new Vector2(transform.position.x, transform.position.y), itemContainer.transform.rotation); // spawn the item
+
+		// Generate a random angle between 0 and 180 degrees
+		float randomAngle = Random.Range(0f, 180f);
+
+		// Convert the angle to a direction vector
+		Vector2 direction = new Vector2(Mathf.Cos(randomAngle * Mathf.Deg2Rad), Mathf.Sin(randomAngle * Mathf.Deg2Rad));
+
+		// Apply the force to the item instance
+		itemInstance.GetComponent<Rigidbody2D>().AddForce(direction * Random.Range(1f, 3f), ForceMode2D.Impulse);
 	}
 
 	/**
