@@ -28,15 +28,16 @@ public class BlockScript : MonoBehaviour
 		gameObject.name = gameObject.name.Replace("(Clone)", "").Trim(); // remove (Clone) from object name
 		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
 		tilemap = GameObject.Find("Grid").transform.Find("Tilemap").GetComponent<Tilemap>();
+		itemDropBehaviour = BlockBehaviourData.getItemDropBehaviour(gameObject.name, transform.position);
 
 		breakAnimationObject = Resources.Load("Prefabs\\BreakBlockAnimation") as GameObject;
 		// initialize break behaviour
 		breakBehaviour = BlockBehaviourData.getBreakBehaviour(gameObject.name);
+		openFurnaceScript = GameObject.Find("Canvas").transform.Find("InventoryParent").GetComponent<OpenFurnaceScript>();
 	}
 	// Start is called before the first frame update
 	void Start()
     {
-		itemDropBehaviour = BlockBehaviourData.getItemDropBehaviour(gameObject.name, transform.position);
 		rightClickBehaviour = BlockBehaviourData.getRightClickBehaviour(gameObject, transform.position);
 
 		Transform audioParent = GameObject.Find("Audio").transform;
@@ -45,8 +46,6 @@ public class BlockScript : MonoBehaviour
 		mineBlockAudioSource.pitch = audioSpeed;
 
 		breakBlockAudioSource = audioParent.Find("BreakBlockSound").GetComponent<AudioSource>();
-
-		openFurnaceScript = GameObject.Find("Canvas").transform.Find("InventoryParent").GetComponent<OpenFurnaceScript>();
 	}
 
     // Update is called once per frame
@@ -126,15 +125,19 @@ public class BlockScript : MonoBehaviour
 	 * runs when the player breaks this block.
 	 * drops an item, plays break sound, and destroys this block.
 	 */
-	public void breakBlock()
+	public void breakBlock(bool makeSound = true)
 	{
 		dropItems();
 
 		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, 0, LayerMask.LayerToName(gameObject.layer));
 
 		// play break sound
-		breakBlockAudioSource.clip = breakBehaviour.getBreakSound();
-		breakBlockAudioSource.Play();
+		if(makeSound)
+		{
+			breakBlockAudioSource.clip = breakBehaviour.getBreakSound();
+			breakBlockAudioSource.Play();
+		}
+
 		Destroy(gameObject);
 
 		

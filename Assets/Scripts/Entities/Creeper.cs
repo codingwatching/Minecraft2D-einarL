@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Creeper : Mob
 {
 	private float blastRadius = 4f;
 	private float blastBaseDamage = 45f; // damage taken when really close to creeper, this diminishes the further you are away from it
 	private ParticleSystem explosionParticleSystem;
+	private Tilemap tilemap;
+	private spawnChunkScript scScript;
 
 	private AudioClip fuseSound; // sound when the creeper is going to explode
 
@@ -16,6 +19,8 @@ public class Creeper : Mob
 		hurtSounds = new AudioClip[0];
 		explosionParticleSystem = Resources.Load<ParticleSystem>("Particle Systems\\Explosion Particle System");
 		fuseSound = Resources.Load<AudioClip>("Sounds\\Random\\fuse");
+		tilemap = GameObject.Find("Grid").transform.Find("Tilemap").GetComponent<Tilemap>();
+		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
 		base.Start();
 	}
 
@@ -73,6 +78,8 @@ public class Creeper : Mob
 
 	private void blowUp()
 	{
+		spawnGameObjectsInsteadOfTiles(transform.position);
+
 		int explosionSound = Random.Range(1, 5);
 		AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>($"Sounds\\Random\\explode{explosionSound}"), transform.position);
 
@@ -80,7 +87,7 @@ public class Creeper : Mob
 		List<Collider2D> withinRadius = new List<Collider2D>();
 
 		ContactFilter2D filter = new ContactFilter2D();
-		filter.SetLayerMask(LayerMask.GetMask("Player") | LayerMask.GetMask("Entity") | LayerMask.GetMask("Tilemap") | LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("BackBackground"));
+		filter.SetLayerMask(LayerMask.GetMask("Player") | LayerMask.GetMask("Entity") | LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("Item"));
 
 		// Check for overlaps
 		Physics2D.OverlapCircle(transform.position, blastRadius, filter, withinRadius);
@@ -98,9 +105,51 @@ public class Creeper : Mob
 				if (collider.gameObject.layer == LayerMask.NameToLayer("Entity")) collider.GetComponent<Entity>().takeDamage(damageTaken, transform.position.x);
 				else GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage((int)damageTaken);
 			}
+			else if(collider.gameObject.layer == LayerMask.NameToLayer("Default") || collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground") || collider.gameObject.layer == LayerMask.NameToLayer("BackBackground"))
+			{
+				// if its a block gameobject
+				collider.GetComponent<BlockScript>()?.breakBlock(false);
+			}
+			else if (collider.gameObject.layer == LayerMask.NameToLayer("Item"))
+			{
+				Destroy(collider.gameObject);
+			}
 		}
 
 		Destroy(gameObject);
+	}
+
+	private void spawnGameObjectsInsteadOfTiles(Vector2 center)
+	{
+		// Convert center position from world to cell coordinates
+		Vector3Int centerCell = tilemap.WorldToCell(center);
+
+		// Calculate the bounds of the search area
+		int minX = centerCell.x - Mathf.CeilToInt(blastRadius);
+		int maxX = centerCell.x + Mathf.CeilToInt(blastRadius);
+		int minY = centerCell.y - Mathf.CeilToInt(blastRadius);
+		int maxY = centerCell.y + Mathf.CeilToInt(blastRadius);
+
+		// Iterate over each potential tile position
+		for (int x = minX; x <= maxX; x++)
+		{
+			for (int y = minY; y <= maxY; y++)
+			{
+				Vector3Int tilePos = new Vector3Int(x, y, centerCell.z);
+				Vector2 tileWorldPos = tilemap.CellToWorld(tilePos) + tilemap.cellSize / 2;
+
+				// Check if the tile is within the radius
+				if (Vector2.Distance(center, tileWorldPos) <= blastRadius)
+				{
+					TileBase tile = tilemap.GetTile(tilePos);
+					if (tile != null)
+					{
+						scScript.spawnGameObjectInsteadOfTile(tile, tilePos); // place gameObject at tiles position
+						tilemap.SetTile(tilePos, null); // remove tile
+					}
+				}
+			}
+		}
 	}
 
 	protected override void dropLoot()

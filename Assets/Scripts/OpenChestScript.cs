@@ -1,11 +1,7 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
-using static UnityEditor.Progress;
 
 public class OpenChestScript : MonoBehaviour
 {
