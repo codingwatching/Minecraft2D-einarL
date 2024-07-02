@@ -58,6 +58,8 @@ public class Spider : Mob
 				}
 			}
 		}
+
+		swimmingLogic();
 	}
 
 

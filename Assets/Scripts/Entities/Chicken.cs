@@ -17,6 +17,20 @@ public class Chicken : Animal
 		StartCoroutine(decideIfMakeNoise());
 	}
 
+	protected override void toggleSwimmingPhysics(bool on = true)
+	{
+		if (on)
+		{
+			walkSpeed = 1;
+			runSpeed = 2;
+		}
+		else
+		{
+			walkSpeed = 4;
+			runSpeed = 6;
+		}
+	}
+
 	public override void takeDamage(float damage, float playerXPos)
 	{
 		if (anim.GetBool("isDead")) return;

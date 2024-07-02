@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using static UnityEditor.PlayerSettings;
 
 public class WaterScript : MonoBehaviour
 {
@@ -23,8 +24,19 @@ public class WaterScript : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        
-    }
+        // lets destroy all waterblocks at this position, if any
+		ContactFilter2D filter = new ContactFilter2D();
+		filter.SetLayerMask(LayerMask.GetMask("Water"));
+
+		// Create a list to store the results
+		List<Collider2D> results = new List<Collider2D>();
+
+		// Check for overlaps
+		Physics2D.OverlapCircle(transform.position, 0.45f, filter, results);
+        foreach (Collider2D collider in results) {
+            if(!ReferenceEquals(collider.gameObject, gameObject)) Destroy(collider.gameObject);
+		}
+	}
 
     public void setFlow(bool flowing)
     {

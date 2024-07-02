@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
@@ -14,6 +15,7 @@ public abstract class Entity : MonoBehaviour
 	protected int[] walkingTime = new int[] { 1,5}; // min and max walking time
 	protected float health = 10;
 	protected float makeNoiseChance = 0.04f;
+	protected bool isSwimming = false;
 
 	//public AudioClip[] stepSounds = new AudioClip[5];
 	protected AudioClip[] saySounds = new AudioClip[3];
@@ -21,6 +23,7 @@ public abstract class Entity : MonoBehaviour
 	protected AudioSource sayAudioSource;
 
 	protected Rigidbody2D rb;
+	protected CapsuleCollider2D col;
 	protected Transform higherBlockCheck; // this checks if there is a 2-high block in the way of where the entity is going
 	protected Transform lowerBlockCheck; // this checks if there is a block where the entity is going (then it needs to jump if there is no higher block)
 	protected Animator anim;
@@ -33,6 +36,7 @@ public abstract class Entity : MonoBehaviour
 		lowerBlockCheck = transform.Find("LowerBlockCheck");
 		rb = GetComponent<Rigidbody2D>();
 		anim = GetComponent<Animator>();
+		col = GetComponent<CapsuleCollider2D>();
 		sayAudioSource = GetComponent<AudioSource>();
 		playerTransform = GameObject.Find("SteveContainer").transform;
 
@@ -63,7 +67,92 @@ public abstract class Entity : MonoBehaviour
 
 			if (isBlockInPath()) jump();
 		}
+		swimmingLogic();
 	}
+
+	protected void swimmingLogic()
+	{
+		if (!isSwimming)
+		{
+			if (isInWater())
+			{
+				toggleSwimmingPhysics();
+			}
+		}
+		else if (!isInWater()) // if the entity got out of the water
+		{
+			if (!isWaterBelow()) toggleSwimmingPhysics(false);
+			else
+			{
+				isSwimming = true;
+				rb.AddForce(new Vector2(0, -5));
+			}
+		}
+		else // if entity is swimming
+		{
+			rb.velocity = new Vector2(rb.velocity.x, 3);
+		}
+	}
+
+
+
+	protected virtual void toggleSwimmingPhysics(bool on = true)
+	{
+		if (on) // is swimming
+		{
+			speed = 2;
+
+			rb.gravityScale = 1;
+			rb.drag = 5;
+		}
+		else
+		{
+			speed = 4;
+
+			rb.gravityScale = 5;
+			rb.drag = 0;
+		}
+	}
+
+	protected bool isInWater()
+	{
+		Collider2D[] results = new Collider2D[1];
+
+		ContactFilter2D contactFilter = new ContactFilter2D();
+		contactFilter.layerMask = LayerMask.GetMask("Water");
+		contactFilter.useLayerMask = true;
+
+		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y), 0.01f, contactFilter, results);
+		isSwimming = count > 0;
+		return isSwimming;
+	}
+
+	private bool isWaterBelow()
+	{
+		Collider2D[] results = new Collider2D[1];
+
+		ContactFilter2D contactFilter = new ContactFilter2D();
+		contactFilter.layerMask = LayerMask.GetMask("Water");
+		contactFilter.useLayerMask = true;
+
+		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y - 0.5f), 0.01f, contactFilter, results);
+		return count > 0;
+	}
+
+	protected bool isNoLongerInWater()
+	{
+		Collider2D[] results = new Collider2D[1];
+
+		ContactFilter2D contactFilter = new ContactFilter2D();
+		contactFilter.layerMask = LayerMask.GetMask("Water");
+		contactFilter.useLayerMask = true;
+
+		int count = Physics2D.OverlapCircle(new Vector2(col.bounds.center.x, col.bounds.min.y), 0.01f, contactFilter, results);
+		isSwimming = count > 0;
+		return isSwimming;
+	}
+
+
 
 	public virtual void takeDamage(float damage, float playerXPos)
 	{

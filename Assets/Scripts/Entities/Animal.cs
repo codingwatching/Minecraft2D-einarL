@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class Animal : Entity
 {
-	private float walkSpeed = 4;
+	protected float walkSpeed = 4;
 	protected float runSpeed = 6;
 	private float runTime = 10; // how many seconds the animal runs after being hit
 	private float runCounter = 0;
@@ -38,6 +38,27 @@ public abstract class Animal : Entity
 				if(runningChangeDirectionCoroutine != null) StopCoroutine(runningChangeDirectionCoroutine);
 				runningChangeDirectionCoroutine = null;
 			}
+			swimmingLogic();
+		}
+	}
+
+	protected override void toggleSwimmingPhysics(bool on = true)
+	{
+		if (on)
+		{
+			walkSpeed = 1;
+			runSpeed = 2;
+
+			rb.gravityScale = 1;
+			rb.drag = 5;
+		}
+		else
+		{
+			walkSpeed = 4;
+			runSpeed = 6;
+
+			rb.gravityScale = 5;
+			rb.drag = 0;
 		}
 	}
 

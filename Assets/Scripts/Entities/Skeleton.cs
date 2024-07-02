@@ -35,6 +35,7 @@ public class Skeleton : Mob
 		higherBlockCheck = transform.Find("Skeleton Child").transform.Find("HigherBlockCheck");
 		lowerBlockCheck = transform.Find("Skeleton Child").transform.Find("LowerBlockCheck");
 		rb = GetComponent<Rigidbody2D>();
+		col = GetComponent<CapsuleCollider2D>();
 		anim = transform.Find("Skeleton Child").GetComponent<Animator>();
 		sayAudioSource = transform.Find("Skeleton Child").GetComponent<AudioSource>();
 		playerTransform = GameObject.Find("SteveContainer").transform;
@@ -44,7 +45,7 @@ public class Skeleton : Mob
 
 	protected override void huntPlayer()
 	{
-		if (isDamageCoroutineRunning == false && canHurtPlayer() && isGrounded())
+		if (isDamageCoroutineRunning == false && canHurtPlayer()) //  && isGrounded()
 		{
 			damageCoroutine = StartCoroutine(damagePlayer());
 			anim.SetBool("isWalking", false);
