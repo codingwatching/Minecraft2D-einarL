@@ -185,7 +185,7 @@ public class OpenFurnaceScript : MonoBehaviour
 	 */
 	public void updateFurnaceSlot(InventorySlot newItem, bool isBottomSlot)
 	{
-		bool isCooking = false;
+		bool isCooking;
 		if (isBottomSlot)
 		{
 			isCooking = openedFurnace.putItemInBottomSlot(newItem);
@@ -260,5 +260,14 @@ public class OpenFurnaceScript : MonoBehaviour
 	{
 		yield return new WaitForSeconds(.05f);
 		InventoryScript.setIsInUI(false);
+	}
+
+	public bool isFurnaceOn(Vector2 furnacePos)
+	{
+		foreach(FurnaceLogic furnace in furnaces)
+		{
+			if (furnace.worldPosition == furnacePos) return furnace.isCooking();
+		}
+		return false;
 	}
 }

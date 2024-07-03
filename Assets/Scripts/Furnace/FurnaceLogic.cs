@@ -2,11 +2,12 @@ using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Tilemaps;
+
 
 public class FurnaceLogic
 {
-	private Vector2 worldPosition;
+	public Vector2 worldPosition { get; private set; }
 	private InventorySlot furnaceTopSlot = new InventorySlot();
 	private InventorySlot furnaceBottomSlot = new InventorySlot();
 	private InventorySlot furnaceResultSlot = new InventorySlot();
@@ -17,6 +18,9 @@ public class FurnaceLogic
 	private bool isCookCoroutineRunning = false;
 	private bool isArrowCoroutineRunning = false;
 
+	private spawnChunkScript scScript;
+	private Tilemap tilemap;
+
 	private float fireProgress = 0; // this is 1 to display a full fire image, goes down to 0 when the furnace is burning
 	private float arrowProgress = 0; // the arrow image is 24 pixels wide, so this should be some x/24 where 0 <= x <= 24
 
@@ -25,6 +29,8 @@ public class FurnaceLogic
 	public FurnaceLogic(Vector2 worldPosition)
 	{
 		this.worldPosition = worldPosition;
+		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
+		tilemap = GameObject.Find("Grid").transform.Find("Tilemap").GetComponent<Tilemap>();
 	}
 
 	public FurnaceLogic(JArray furnaceData) // float xPos, float yPos, InventorySlot topSlot, InventorySlot bottomSlot, InventorySlot resultSlot, float fireProgress, float arrowProgress, float burnTime
@@ -41,6 +47,9 @@ public class FurnaceLogic
 
 		resultItem = FurnaceHashtable.getBurnedItem(furnaceTopSlot.itemName);
 		isBurnableInTopSlot = resultItem != "";
+
+		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
+		tilemap = GameObject.Find("Grid").transform.Find("Tilemap").GetComponent<Tilemap>();
 	}
 
 
@@ -105,6 +114,7 @@ public class FurnaceLogic
 	public IEnumerator cookCoroutine()
 	{
 		if (isCookCoroutineRunning) yield break;
+		setFurnaceTexture(true);
 		while (isCooking())
 		{
 			isCookCoroutineRunning = true;
@@ -129,6 +139,7 @@ public class FurnaceLogic
 				}
 			}
 		}
+		setFurnaceTexture(false);
 		isCookCoroutineRunning = false;
 	}
 
@@ -177,8 +188,54 @@ public class FurnaceLogic
 		return false;
 	}
 
+	// sets the texture on the furnace block to be the furnace cooking texture if on is true, otherwise the normal off texture
+	public void setFurnaceTexture(bool on = true)
+	{
+		// if the furnace is not in the world, then return
+		if (worldPosition.x < SpawningChunkData.getLeftMostChunkEdge() || worldPosition.x > SpawningChunkData.getRightMostChunkEdge()) return;
+		GameObject furnace = getFurnaceObject();
+		if (furnace == null) return;
+
+		Sprite furnaceTexture;
+		if (on)
+		{
+			furnaceTexture = Resources.Load<Sprite>("Textures\\BlockTextures\\FurnaceOn");
+			furnace.transform.Find("On").gameObject.SetActive(true);
+		}
+		else
+		{
+			furnaceTexture = Resources.Load<Sprite>("Textures\\BlockTextures\\FurnaceOff");
+			furnace.transform.Find("On").gameObject.SetActive(false);
+		}
+
+		furnace.GetComponent<SpriteRenderer>().sprite = furnaceTexture;
+		// TODO: also put the particle system on/off
+	}
+	/**
+	 * returns the furnace gameobject that is attatched to this furnaceLogic instance.
+	 * you can ignore what firstTry is, it is just a variable that makes sure that if there is a bug, then
+	 * we wont end up in an infinite loop.
+	 */
+	private GameObject getFurnaceObject()
+	{
+		List<Collider2D> results = new List<Collider2D>();
+
+		ContactFilter2D filter = new ContactFilter2D();
+		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("BackBackground"));
+
+		// Check for overlaps
+		Physics2D.OverlapCircle(worldPosition, 0.1f, filter, results);
+
+		foreach(Collider2D collider in results)
+		{
+			if (collider.gameObject.name.Equals("Furnace")) return collider.gameObject;
+		}
+		Debug.LogError("Did not find a furnace at position: " + worldPosition);
+		return null;
+	}
+
 	// returns true if the fire animation is on
-	private bool isCooking()
+	public bool isCooking()
 	{
 		return fireProgress > 0f;
 	}

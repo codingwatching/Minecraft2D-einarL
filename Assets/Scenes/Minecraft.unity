@@ -11549,6 +11549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grassTexture: {fileID: 21300000, guid: 11fd8ed4ec14d9649875fab63bd783db, type: 3}
   snowyGrassTexture: {fileID: 21300000, guid: 9a1aaf39a8f06264ca12176257b92562, type: 3}
+  furnaceOnTexture: {fileID: 21300000, guid: ae376b1b584b4a748b60c412b152db88, type: 3}
   tilemap: {fileID: 1139891637}
   backgroundVisualTiles: {fileID: 899169872}
   snowParticleSystem: {fileID: 6567574916235594757, guid: e3ebed8671ca4b147945ba7083fde31d, type: 3}

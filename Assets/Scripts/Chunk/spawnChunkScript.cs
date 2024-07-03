@@ -17,6 +17,7 @@ public class spawnChunkScript : MonoBehaviour
 
     public Sprite grassTexture;
 	public Sprite snowyGrassTexture;
+	public Sprite furnaceOnTexture;
     public Tilemap tilemap;
     public Tilemap backgroundVisualTiles;
     public ParticleSystem snowParticleSystem;
@@ -47,6 +48,7 @@ public class spawnChunkScript : MonoBehaviour
     private SunLightMovementScript sunLightMovementScript;
     private DayProcessScript dayProcessScript;
 	private MainThreadDispatcher mainThreadDispatcher;
+	private OpenFurnaceScript openFurnaceScript;
 	private IDataService dataService = JsonDataService.Instance;
 
 	// Start is called before the first frame update
@@ -55,6 +57,7 @@ public class spawnChunkScript : MonoBehaviour
 		sunLightMovementScript = GameObject.Find("Sun").GetComponent<SunLightMovementScript>();
         dayProcessScript = GameObject.Find("CM vcam").transform.Find("SunAndMoonTexture").GetComponent<DayProcessScript>();
 		mainThreadDispatcher = GameObject.Find("EventSystem").GetComponent<MainThreadDispatcher>();
+		openFurnaceScript = GameObject.Find("Canvas").transform.Find("InventoryParent").GetComponent<OpenFurnaceScript>();
 
 		BlockHashtable.initializeBlockHashtable();
         decideBiome(); // TODO: dont do this if the biome is already decided, we need to save which biome was rendering when we quit the game
@@ -475,7 +478,7 @@ public class spawnChunkScript : MonoBehaviour
 			{
 				for (int y = 0; y < chunk.GetLength(1); y++)
 				{
-					if ((41 <= chunk[x, y] && chunk[x, y] <= 56) || chunk[x, y] == 61 || chunk[x, y] == 62 || chunk[x, y] == 63) // if its a door || water || ice || chest
+					if ((41 <= chunk[x, y] && chunk[x, y] <= 56) || chunk[x, y] == 61 || chunk[x, y] == 62 || chunk[x, y] == 63 || chunk[x, y] == 21) // if its a door || water || ice || chest || furnace
 					{
 						int blockID = chunk[x, y];
 						float xBlockPos = xPos + SpawningChunkData.blockSize * x;
@@ -581,6 +584,10 @@ public class spawnChunkScript : MonoBehaviour
 
 		if (blockID == 2) spawnedBlock.GetComponent<SpriteRenderer>().sprite = grassTexture; // grass block
 		else if (blockID == 28) spawnedBlock.GetComponent<SpriteRenderer>().sprite = snowyGrassTexture; // snowy grass block
+		else if (blockID == 21 && openFurnaceScript.isFurnaceOn(new Vector2(xPos, yPos))) {
+			spawnedBlock.GetComponent<SpriteRenderer>().sprite = furnaceOnTexture;
+			spawnedBlock.transform.Find("On").gameObject.SetActive(true);
+		} 
 		spawnedBlock.layer = LayerMask.NameToLayer(layer);
 
         if (layer.Equals("BackBackground"))
@@ -632,7 +639,7 @@ public class spawnChunkScript : MonoBehaviour
         }
 		if (tile.name == "SnowyGrassBlock")
 		{
-			instantiateBlock(28, tilePos.x + .5f, tilePos.y + .5f); // spawn grass block
+			instantiateBlock(28, tilePos.x + .5f, tilePos.y + .5f); // spawn snowy grass block
 			return;
 		}
 		instantiateBlock(BlockHashtable.getIDByBlockName(tile.name), tilePos.x + .5f, tilePos.y + .5f);
