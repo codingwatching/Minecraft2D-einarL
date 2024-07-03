@@ -54,6 +54,13 @@ public class Creeper : Mob
 		if (isBlockInPath()) jump();
 	}
 
+	protected override bool canHurtPlayer()
+	{
+		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
+		float playerDistanceY = Mathf.Abs(playerPos.position.y - transform.position.y);
+		return playerDistanceX <= canHurtPlayerWithin && playerDistanceY <= 3f && !anim.GetBool("isDead");
+	}
+
 	protected override IEnumerator damagePlayer()
 	{
 		isDamageCoroutineRunning = true;

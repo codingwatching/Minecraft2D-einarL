@@ -199,6 +199,7 @@ public class FurnaceLogic
 		Sprite furnaceTexture;
 		if (on)
 		{
+			AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds\\Random\\fire"), worldPosition);
 			furnaceTexture = Resources.Load<Sprite>("Textures\\BlockTextures\\FurnaceOn");
 			furnace.transform.Find("On").gameObject.SetActive(true);
 		}
@@ -213,8 +214,6 @@ public class FurnaceLogic
 	}
 	/**
 	 * returns the furnace gameobject that is attatched to this furnaceLogic instance.
-	 * you can ignore what firstTry is, it is just a variable that makes sure that if there is a bug, then
-	 * we wont end up in an infinite loop.
 	 */
 	private GameObject getFurnaceObject()
 	{
@@ -230,7 +229,6 @@ public class FurnaceLogic
 		{
 			if (collider.gameObject.name.Equals("Furnace")) return collider.gameObject;
 		}
-		Debug.LogError("Did not find a furnace at position: " + worldPosition);
 		return null;
 	}
 
