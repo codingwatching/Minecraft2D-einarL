@@ -7,7 +7,7 @@ public class DiamondItemDrop : ItemDropBehaviour
 	public override List<GameObject> dropItem(string gameObjectName, ToolInstance usingTool, Vector2 blockPosition = default)
 	{
 		// if pickaxe && not wood && not stone
-		if (usingTool.getToolType().Equals(ToolType.Pickaxe) && !usingTool.getToolMaterial().Equals(ToolMaterial.Wood) && !usingTool.getToolMaterial().Equals(ToolMaterial.Stone))
+		if (usingTool != null && usingTool.getToolType().Equals(ToolType.Pickaxe) && !usingTool.getToolMaterial().Equals(ToolMaterial.Wood) && !usingTool.getToolMaterial().Equals(ToolMaterial.Stone))
 		{
 			return base.dropItem("Diamond", usingTool);
 		}

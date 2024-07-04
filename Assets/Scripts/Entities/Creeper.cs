@@ -161,7 +161,12 @@ public class Creeper : Mob
 
 	protected override void dropLoot()
 	{
-		//dropItem("GunPowder");
+		int drops = Random.Range(1, 4);
+
+		for(int _ = 0; _ < drops; _++)
+		{
+			dropItem("Gunpowder");
+		}
 	}
 
 	private void playFuseSound()

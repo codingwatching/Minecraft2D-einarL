@@ -59,7 +59,12 @@ public class Cow : Animal
 
 	protected override void dropLoot()
 	{
-		dropItem("Leather");
+		int drops = Random.Range(1, 3);
+
+		for (int _ = 0; _ < drops; _++)
+		{
+			dropItem("Leather");
+		}
 		dropItem("SteakRaw");
 	}
 

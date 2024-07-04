@@ -77,6 +77,7 @@ public static class BlockBehaviourData
 			{ "Ladder", new BreakWood() },
 			{ "LadderLeft", new BreakWood() },
 			{ "LadderRight", new BreakWood() },
+			{ "TNT", new BreakInstantly() },
 		};
 
 		itemDropBehaviours = new Hashtable()
@@ -157,6 +158,7 @@ public static class BlockBehaviourData
 			{ "BedUpperRight", new object[] { "cloth", 4} },
 			{ "BedLowerLeft", new object[] { "cloth", 4} },
 			{ "BedLowerRight", new object[] { "cloth", 4} },
+			{ "TNT", new object[] { "cloth", 4} },
 
 		};
 		prevStepSound = new object[] { "dirt", 4 };

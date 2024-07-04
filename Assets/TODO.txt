@@ -26,10 +26,11 @@ burp sound for steve
 
 add fall damage for entities
 
-! have the furnace texture to be the lit furnace when the furnace is turned on
-
 store chunks in region files, about 300 chunks or so in a region.
 
 ! have knockback on player when entities attack
 
 breaking bed removes the spawnpoint
+
+
+bones, lava, tnt, flint and steel, pink tree biome, water in caves

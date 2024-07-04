@@ -97,6 +97,7 @@ public static class BlockHashtable
 			{ 60, getBlockTileWithName("LadderRight")},
 			{ 62, getBlockTileWithName("Ice")},
 			{ 64, getBlockTileWithName("FurnaceOn")},
+			{ 65, getBlockTileWithName("TNT")},
 		};
 		// id's in blockTiles and blocks hashtable need to be the same for each block
 		blocks = new Hashtable()
@@ -164,7 +165,8 @@ public static class BlockHashtable
 			{ 61, getBlockWithName("Water")},
 			{ 62, getBlockWithName("Ice")},
 			{ 63, getBlockWithName("Chest")},
-			{ 64, getBlockWithName("Furnace")} // furnace, but with the FurnaceOn texture
+			{ 64, getBlockWithName("Furnace")}, // furnace, but with the FurnaceOn texture
+			{ 65, getBlockWithName("TNT")}
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall
@@ -198,6 +200,7 @@ public static class BlockHashtable
 			{"MushroomRed", 1},
 			{"Rose", 1},
 			{"Dandelion", 1},
+			{"TNT", 1},
 			{"Sand", 4}, // 4 is sand
 			{"Cactus", 5}, // 5 is cloth
 			{"Wool", 5},
@@ -206,7 +209,7 @@ public static class BlockHashtable
 			{"BedLowerLeft", 5},
 			{"BedUpperRight", 5},
 			{"BedLowerRight", 5},
-			{"Water", -2},
+			{"Water", -2}, // -2 for water place sound
 		};
 
 		unstackableItems = new HashSet<string>() // tools and armors dont have to be in here despite being unstackable

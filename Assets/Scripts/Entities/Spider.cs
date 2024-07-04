@@ -72,7 +72,12 @@ public class Spider : Mob
 
 	protected override void dropLoot()
 	{
-		dropItem("String");
+		int drops = Random.Range(1, 3);
+
+		for (int _ = 0; _ < drops; _++)
+		{
+			dropItem("String");
+		}
 	}
 
 	private bool canJumpTowardsPlayer()

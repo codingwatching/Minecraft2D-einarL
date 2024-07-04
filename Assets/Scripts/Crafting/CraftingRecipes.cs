@@ -466,6 +466,19 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(2, 2) }
 		}, new InventorySlot("Chest", 1)
 		},
+
+		// TNT
+		new object[]{ "Gunpowder", new object[] {
+			new object[] { "Sand", new Vector2(1, 0) },
+			new object[] { "Gunpowder", new Vector2(2, 0) },
+			new object[] { "Sand", new Vector2(0, 1) },
+			new object[] { "Gunpowder", new Vector2(1, 1) },
+			new object[] { "Sand", new Vector2(2, 1) },
+			new object[] { "Gunpowder", new Vector2(0, 2) },
+			new object[] { "Sand", new Vector2(1, 2) },
+			new object[] { "Gunpowder", new Vector2(2, 2) }
+		}, new InventorySlot("TNT", 1)
+		},
 	};
 
 	public static List<object[]> getRecipesByLeftBottomMostItem(string itemName)
