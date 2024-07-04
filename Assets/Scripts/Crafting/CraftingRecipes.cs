@@ -279,6 +279,46 @@ public static class CraftingRecipes
 		}, new InventorySlot("Bed", 1)
 		},
 
+		// leather helmet
+		new object[]{ "Leather", new object[] {
+			new object[] { "Leather", new Vector2(2, 0) },
+			new object[] { "Leather", new Vector2(0, 1) },
+			new object[] { "Leather", new Vector2(1, 1) },
+			new object[] { "Leather", new Vector2(2, 1) }
+		}, new InventorySlot( new ArmorInstance(getArmorScriptable("LeatherHelmet")), "LeatherHelmet")
+		},
+
+		// leather chestplate
+		new object[]{ "Leather", new object[] {
+			new object[] { "Leather", new Vector2(1, 0) },
+			new object[] { "Leather", new Vector2(2, 0) },
+			new object[] { "Leather", new Vector2(0, 1) },
+			new object[] { "Leather", new Vector2(1, 1) },
+			new object[] { "Leather", new Vector2(2, 1) },
+			new object[] { "Leather", new Vector2(0, 2) },
+			new object[] { "Leather", new Vector2(2, 2) }
+		}, new InventorySlot( new ArmorInstance(getArmorScriptable("LeatherChestplate")), "LeatherChestplate")
+		},
+
+		// leather leggings
+		new object[]{ "Leather", new object[] {
+			new object[] { "Leather", new Vector2(2, 0) },
+			new object[] { "Leather", new Vector2(0, 1) },
+			new object[] { "Leather", new Vector2(2, 1) },
+			new object[] { "Leather", new Vector2(0, 2) },
+			new object[] { "Leather", new Vector2(1, 2) },
+			new object[] { "Leather", new Vector2(2, 2) }
+		}, new InventorySlot( new ArmorInstance(getArmorScriptable("LeatherLeggings")), "LeatherLeggings")
+		},
+
+		// leather boots
+		new object[]{ "Leather", new object[] {
+			new object[] { "Leather", new Vector2(2, 0) },
+			new object[] { "Leather", new Vector2(0, 1) },
+			new object[] { "Leather", new Vector2(2, 1) }
+		}, new InventorySlot( new ArmorInstance(getArmorScriptable("LeatherBoots")), "LeatherBoots")
+		},
+
 		// iron helmet
 		new object[]{ "IronIngot", new object[] {
 			new object[] { "IronIngot", new Vector2(2, 0) },

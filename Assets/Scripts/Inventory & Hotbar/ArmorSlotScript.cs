@@ -235,7 +235,7 @@ public class ArmorSlotScript : MonoBehaviour, IPointerEnterHandler, IPointerExit
                 switch (itemInSlot.armorInstance.getArmorMaterial())
                 {
                     case ArmorMaterial.Leather:
-						// armorOutfitScript.addLeatherHelmet();
+						armorOutfitScript.addLeatherHelmet();
 						break;
                     case ArmorMaterial.Iron:
                         armorOutfitScript.addIronHelmet();
@@ -252,7 +252,7 @@ public class ArmorSlotScript : MonoBehaviour, IPointerEnterHandler, IPointerExit
 				switch (itemInSlot.armorInstance.getArmorMaterial())
 				{
 					case ArmorMaterial.Leather:
-						// armorOutfitScript.addLeatherChestplate();
+						armorOutfitScript.addLeatherChestplate();
 						break;
 					case ArmorMaterial.Iron:
 						armorOutfitScript.addIronChestplate();
@@ -269,7 +269,7 @@ public class ArmorSlotScript : MonoBehaviour, IPointerEnterHandler, IPointerExit
 				switch (itemInSlot.armorInstance.getArmorMaterial())
 				{
 					case ArmorMaterial.Leather:
-						// armorOutfitScript.addLeatherLeggings();
+						armorOutfitScript.addLeatherLeggings();
 						break;
 					case ArmorMaterial.Iron:
 						armorOutfitScript.addIronLeggings();
@@ -286,7 +286,7 @@ public class ArmorSlotScript : MonoBehaviour, IPointerEnterHandler, IPointerExit
 				switch (itemInSlot.armorInstance.getArmorMaterial())
 				{
 					case ArmorMaterial.Leather:
-						// armorOutfitScript.addLeatherBoots();
+						armorOutfitScript.addLeatherBoots();
 						break;
 					case ArmorMaterial.Iron:
 						armorOutfitScript.addIronBoots();

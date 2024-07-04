@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -211,7 +212,13 @@ public class HealthbarScript : MonoBehaviour
 
 		foreach (SpriteRenderer spriteRenderer in spriteRenderers)
 		{
-			spriteRenderer.color = color;
+            // leather armor needs to have brown color
+            if (spriteRenderer.sprite != null && spriteRenderer.sprite.name.StartsWith("leather"))
+            {
+                if (red) spriteRenderer.color = new Color32(191, 43, 30, 255);
+				else spriteRenderer.color = new Color32(144, 82, 18, 255);
+			}
+            else spriteRenderer.color = color;
 		}
 	}
 

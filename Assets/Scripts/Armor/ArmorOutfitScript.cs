@@ -18,6 +18,9 @@ public class ArmorOutfitScript
 	private SpriteRenderer legFrontBoots;
 	private SpriteRenderer legBackBoots;
 
+	private Sprite[] leatherArmorImages;
+	private Sprite[] leatherLeggingsImages;
+
 	private Sprite[] ironArmorImages;
 	private Sprite[] ironLeggingsImages;
 
@@ -54,6 +57,8 @@ public class ArmorOutfitScript
 		legFrontBoots = steve.Find("Leg Front").Find("LegFrontBoots").GetComponent<SpriteRenderer>();
 		legBackBoots = steve.Find("Leg Back").Find("LegBackBoots").GetComponent<SpriteRenderer>();
 
+		leatherArmorImages = Resources.LoadAll<Sprite>("Textures/Armor/leather_layer_1");
+		leatherLeggingsImages = Resources.LoadAll<Sprite>("Textures/Armor/leather_layer_2");
 
 		ironArmorImages = Resources.LoadAll<Sprite>("Textures/Armor/iron_layer_1");
 		ironLeggingsImages = Resources.LoadAll<Sprite>("Textures/Armor/iron_layer_2");
@@ -86,9 +91,45 @@ public class ArmorOutfitScript
 		legBackBoots.sprite = null;
 	}
 
+	public void addLeatherHelmet()
+	{
+		helmet.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_0");
+		helmet.color = new Color32(144, 82, 18, 255);
+	}
+
+	public void addLeatherChestplate()
+	{
+		torsoChestplate.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_1");
+		armFrontChestplate.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_2");
+		armBackChestplate.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_3");
+
+		torsoChestplate.color = new Color32(144, 82, 18, 255);
+		armFrontChestplate.color = new Color32(144, 82, 18, 255);
+		armBackChestplate.color = new Color32(144, 82, 18, 255);
+	}
+
+	public void addLeatherLeggings()
+	{
+		legFrontLeggings.sprite = getSpriteWithName(leatherLeggingsImages, "leather_layer_2_0");
+		legBackLeggings.sprite = getSpriteWithName(leatherLeggingsImages, "leather_layer_2_1");
+
+		legFrontLeggings.color = new Color32(144, 82, 18, 255);
+		legBackLeggings.color = new Color32(144, 82, 18, 255);
+	}
+
+	public void addLeatherBoots()
+	{
+		legFrontBoots.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_4");
+		legBackBoots.sprite = getSpriteWithName(leatherArmorImages, "leather_layer_1_5");
+
+		legFrontBoots.color = new Color32(144, 82, 18, 255);
+		legBackBoots.color = new Color32(144, 82, 18, 255);
+	}
+
 	public void addIronHelmet()
 	{
 		helmet.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_0");
+		helmet.color = new Color(1, 1, 1);
 	}
 
 	public void addIronChestplate()
@@ -96,23 +137,35 @@ public class ArmorOutfitScript
 		torsoChestplate.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_1");
 		armFrontChestplate.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_2");
 		armBackChestplate.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_5");
+
+
+		torsoChestplate.color = new Color(1, 1, 1);
+		armFrontChestplate.color = new Color(1, 1, 1);
+		armBackChestplate.color = new Color(1, 1, 1);
 	}
 
 	public void addIronLeggings()
 	{
 		legFrontLeggings.sprite = getSpriteWithName(ironLeggingsImages, "iron_layer_2_0");
 		legBackLeggings.sprite = getSpriteWithName(ironLeggingsImages, "iron_layer_2_1");
+
+		legFrontLeggings.color = new Color(1, 1, 1);
+		legBackLeggings.color = new Color(1, 1, 1);
 	}
 
 	public void addIronBoots()
 	{
 		legFrontBoots.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_3");
 		legBackBoots.sprite = getSpriteWithName(ironArmorImages, "iron_layer_1_4");
+
+		legFrontBoots.color = new Color(1, 1, 1);
+		legBackBoots.color = new Color(1, 1, 1);
 	}
 
 	public void addDiamondHelmet()
 	{
 		helmet.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_0");
+		helmet.color = new Color(1, 1, 1);
 	}
 
 	public void addDiamondChestplate()
@@ -120,21 +173,29 @@ public class ArmorOutfitScript
 		torsoChestplate.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_1");
 		armFrontChestplate.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_2");
 		armBackChestplate.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_2");
+
+		torsoChestplate.color = new Color(1, 1, 1);
+		armFrontChestplate.color = new Color(1, 1, 1);
+		armBackChestplate.color = new Color(1, 1, 1);
 	}
 
 	public void addDiamondLeggings()
 	{
 		legFrontLeggings.sprite = getSpriteWithName(diamondLeggingsImages, "diamond_layer_2_0");
 		legBackLeggings.sprite = getSpriteWithName(diamondLeggingsImages, "diamond_layer_2_1");
+
+		legFrontLeggings.color = new Color(1, 1, 1);
+		legBackLeggings.color = new Color(1, 1, 1);
 	}
 
 	public void addDiamondBoots()
 	{
 		legFrontBoots.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_3");
 		legBackBoots.sprite = getSpriteWithName(diamondArmorImages, "diamond_layer_1_4");
+
+		legFrontBoots.color = new Color(1, 1, 1);
+		legFrontBoots.color = new Color(1, 1, 1);
 	}
-
-
 
 
 	private Sprite getSpriteWithName(Sprite[] list, string name)
