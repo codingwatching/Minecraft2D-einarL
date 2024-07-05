@@ -166,7 +166,8 @@ public static class BlockHashtable
 			{ 62, getBlockWithName("Ice")},
 			{ 63, getBlockWithName("Chest")},
 			{ 64, getBlockWithName("Furnace")}, // furnace, but with the FurnaceOn texture
-			{ 65, getBlockWithName("TNT")}
+			{ 65, getBlockWithName("TNT")},
+			{ 66, getBlockWithName("Fire")},
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall
@@ -177,6 +178,7 @@ public static class BlockHashtable
 			{"BedUpperLeft", new PlaceBed()},
 			{"DoorOakTopRight", new PlaceDoor()},
 			{"DoorSpruceTopRight", new PlaceDoor()},
+			{"Fire", new PlaceFire()}, // for flint and steel
 		};
 
 		// maps blocks to which index in the placeBlockAudio list is the place block sound for the block

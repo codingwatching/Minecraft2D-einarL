@@ -184,7 +184,7 @@ public class PlaceBlockScript : MonoBehaviour
      */
 	private void placeBlockInBackground()
 	{
-        if (holdingItem.name.Equals("Water")) return; // cant place water in the background
+        if (holdingItem.name.Equals("Water") || holdingItem.name.Equals("Fire")) return; // cant place water/fire in the background
 		List<GameObject> placedBlocks = placeBlock();
 
 		foreach (GameObject block in placedBlocks)
@@ -230,6 +230,7 @@ public class PlaceBlockScript : MonoBehaviour
 	private List<GameObject> placeBlock()
     {
 		makePlaceBlockSound();
+        string holdingItemName = holdingItem.name;
 		PlaceBlockBehaviour pbBehaviour = BlockHashtable.getPlaceBlockBehaviour(holdingItem.name);
 		List<GameObject> placedBlocks;
         if (pbBehaviour != null)
@@ -240,8 +241,8 @@ public class PlaceBlockScript : MonoBehaviour
 
 		}
 		else placedBlocks = new List<GameObject>() { Instantiate(holdingItem, hoveringOverPosition, Quaternion.identity) }; // place block
-		InventoryScript.decrementSlot(InventoryScript.getSelectedSlot()); // remove the block from the inventory
-        if (placedBlocks[0].name.StartsWith("Water"))
+		if(!holdingItemName.Equals("Fire")) InventoryScript.decrementSlot(InventoryScript.getSelectedSlot()); // remove the block from the inventory
+        if (placedBlocks.Count > 0 && placedBlocks[0].name.StartsWith("Water"))
         {
             InventoryScript.setSelectedSlotItem(new InventorySlot("Bucket"));
         }
@@ -305,6 +306,7 @@ public class PlaceBlockScript : MonoBehaviour
         if(itemName.Equals("Bed")) holdingItem = Resources.Load<GameObject>("Prefabs\\Blocks\\BedUpperLeft");
 		else if (itemName.StartsWith("Door")) holdingItem = Resources.Load<GameObject>("Prefabs\\Blocks\\Door" + itemName.Replace("Door", "") + "TopRight");
         else if (itemName.Equals("WaterBucket")) holdingItem = Resources.Load<GameObject>("Prefabs\\Blocks\\Water");
+        else if (itemName.Equals("FlintAndSteel")) holdingItem = Resources.Load<GameObject>("Prefabs\\Blocks\\Fire");
 		else holdingItem = Resources.Load<GameObject>("Prefabs\\Blocks\\" +  itemName);
 
         if (rightClickItemBehaviour != null) rightClickItemBehaviour.stopHoldingRightClick(false); // previously held item might have e.g. been a bow and if we are holding right click while switching items, then we call this function

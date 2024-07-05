@@ -478,12 +478,12 @@ public class spawnChunkScript : MonoBehaviour
 			{
 				for (int y = 0; y < chunk.GetLength(1); y++)
 				{
-					if ((41 <= chunk[x, y] && chunk[x, y] <= 56) || chunk[x, y] == 61 || chunk[x, y] == 62 || chunk[x, y] == 63 || chunk[x, y] == 21) // if its a door || water || ice || chest || furnace
+					if ((41 <= chunk[x, y] && chunk[x, y] <= 56) || chunk[x, y] == 61 || chunk[x, y] == 62 || chunk[x, y] == 63 || chunk[x, y] == 21 || chunk[x, y] == 66) // if its a door || water || ice || chest || furnace || fire
 					{
 						int blockID = chunk[x, y];
 						float xBlockPos = xPos + SpawningChunkData.blockSize * x;
 						float yBlockPos = yPos - SpawningChunkData.blockSize * y;
-						mainThreadDispatcher.enqueue(() => instantiateBlock(blockID, xBlockPos, yBlockPos, blockID == 61 ? "Water" : "Default")); // make the main thread do this
+						mainThreadDispatcher.enqueue(() => instantiateBlock(blockID, xBlockPos, yBlockPos, blockID == 61 ? "Water" : (blockID == 66 ? "Fire" : "Default"))); // make the main thread do this
 						tiles[index] = null;
 					}
 					else
