@@ -148,16 +148,21 @@ public class BlockScript : MonoBehaviour
 			toolBreakingWith.reduceDurability();
 		}
 
-		// check if above block is fallType, then make it fall
-		checkIfAboveBlockIsFallType();
-		checkIfAboveIsNoFloatType(); // check if the block above is cactus, then make it break instantly
-		checkForWater(); // chekc if the blocks around it is water, then make it flow
+		checkSurroundingBlocks();
 
 		// if this block was a furnace, then we need to drop the items that were in the furnace
 		if (gameObject.name.Equals("Furnace")) openFurnaceScript.removeFurnace(transform.position);
 		else if (gameObject.name.Equals("Ice")) placeWater();
 
 		createBackgroundVisualBlock();
+	}
+
+	public void checkSurroundingBlocks()
+	{
+		// check if above block is fallType, then make it fall
+		checkIfAboveBlockIsFallType();
+		checkIfAboveIsNoFloatType(); // check if the block above is cactus, then make it break instantly
+		checkForWater(); // chekc if the blocks around it is water, then make it flow
 	}
 
 	// this is used for the ice block, places water where the ice was broken

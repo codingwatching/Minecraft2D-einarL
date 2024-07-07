@@ -212,6 +212,7 @@ public static class BlockHashtable
 			{"BedUpperRight", 5},
 			{"BedLowerRight", 5},
 			{"Water", -2}, // -2 for water place sound
+			{"Fire", -1}, // flint and steel
 		};
 
 		unstackableItems = new HashSet<string>() // tools and armors dont have to be in here despite being unstackable

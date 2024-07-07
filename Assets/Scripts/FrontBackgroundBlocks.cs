@@ -39,6 +39,15 @@ public static class FrontBackgroundBlocks
 		{"Gravel"}
 	};
 
+	private static HashSet<string> burnableBlocks = new HashSet<string>()
+	{
+		{"PlankOak"},
+		{"LogOak"},
+		{"PlankSpruce"},
+		{"LogSpruce"},
+		{"Wool"}
+	};
+
 	public static bool isFallType(string blockName)
 	{
 		return fallTypes.Contains(blockName);
@@ -57,5 +66,10 @@ public static class FrontBackgroundBlocks
 	public static bool isFrontBackgroundBlockPlaceableNextTo(string blockName)
 	{
 		return frontLayerBlocksThatCanBePlacedNextTo.Contains(blockName);
+	}
+
+	public static bool isBurnable(string blockName)
+	{
+		return burnableBlocks.Contains(blockName);
 	}
 }

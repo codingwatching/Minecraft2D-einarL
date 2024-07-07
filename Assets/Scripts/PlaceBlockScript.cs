@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -426,14 +427,18 @@ public class PlaceBlockScript : MonoBehaviour
      */
 	private bool checkIfPlaceable(GameObject futureBlockPos)
     {
-        // cast a ray from the players head and torso to check if the ray can get to the block's position
-        bool raycastSuccess = raycast(head.transform.position, futureBlockPos.transform.position) || raycast(torso.transform.position, futureBlockPos.transform.position) || raycast(new Vector2(head.transform.position.x, head.transform.position.y + 1.5f), futureBlockPos.transform.position);
-        if(!raycastSuccess) return false;
-        if (futureBlockPos.layer == 7) // if it's a frontBackground block
+        if (futureBlockPos.layer != 13) // if its not fire
         {
-			if (checkIfBlockInPosition(false, false, false)) return false;
+			// cast a ray from the players head and torso to check if the ray can get to the block's position
+			bool raycastSuccess = raycast(head.transform.position, futureBlockPos.transform.position) || raycast(torso.transform.position, futureBlockPos.transform.position) || raycast(new Vector2(head.transform.position.x, head.transform.position.y + 1.5f), futureBlockPos.transform.position);
+			if (!raycastSuccess) return false;
+			if (futureBlockPos.layer == 7) // if it's a frontBackground block
+			{
+				if (checkIfBlockInPosition(false, false, false)) return false;
+			}
+			else if (checkIfBlockInPosition()) return false;
 		}
-        else if (checkIfBlockInPosition()) return false;
+        else if (Vector2.Distance(head.transform.position, futureBlockPos.transform.position) > placingRange) return false; // if its fire && not within placing range
 
 		// Create a collision filter to only include colliders in the following layers
 		ContactFilter2D filter = new ContactFilter2D();

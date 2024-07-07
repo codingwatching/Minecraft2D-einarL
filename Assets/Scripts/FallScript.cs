@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -35,6 +36,8 @@ public class FallScript : MonoBehaviour
 	public void fall()
 	{
 		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, 0, LayerMask.LayerToName(gameObject.layer)); // remove block from data
+		Transform fire = transform.Find("Fire");
+		if (fire != null) SpawningChunkData.addOrRemoveFireBlock(fire.position.x, fire.position.y, fire.position.y > transform.position.y ? 1 : 0, false);
         isFalling = true;
 		if(blockScript == null) blockScript = GetComponent<BlockScript>();
 		blockScript.createBackgroundVisualBlock(); // create a background visual block 
@@ -86,6 +89,8 @@ public class FallScript : MonoBehaviour
         else transform.position = new Vector2(transform.position.x, roundedYPos + .5f);
 
 		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, BlockHashtable.getIDByBlockName(gameObject.name), LayerMask.LayerToName(gameObject.layer)); // save the block to data
+		Transform fire = transform.Find("Fire");
+		if (fire != null) SpawningChunkData.addOrRemoveFireBlock(fire.position.x, fire.position.y, fire.position.y > transform.position.y ? 1 : 0);
 	}
 
 	public bool isFallingDown()

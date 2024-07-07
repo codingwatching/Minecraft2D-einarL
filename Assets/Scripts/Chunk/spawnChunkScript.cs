@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Unity.Collections.AllocatorManager;
 
 public class spawnChunkScript : MonoBehaviour
 {
@@ -393,6 +394,7 @@ public class spawnChunkScript : MonoBehaviour
         List<float[]> frontBackgroundBlocks = chunkData.getFrontBackgroundBlocks(); // list of type {[x,y, blockID]}, blocks that go on the FrontBackground layer
 		List<float[]> backBackgroundBlocks = chunkData.getBackBackgroundBlocks(); // list of type {[x,y, blockID]}, blocks that go on the BackBackground layer
         List<float[]> backgroundVisualBlocks = chunkData.getBackgroundVisualBlocks();
+		List<float[]> fireBlocks = chunkData.getFireBlocks();
 		int chunkPos = chunkData.getChunkPosition(); // position of the chunk (left side of the chunk)
 		float height = chunkData.getStartHeight();  // height of where blocks started spawning in this chunk, (basically means: y position of grass block)
         Hashtable prevOreSpawns = chunkData.getPrevOreSpawns();
@@ -401,7 +403,7 @@ public class spawnChunkScript : MonoBehaviour
 		float xPos = chunkPos + SpawningChunkData.blockSize/ 2;
         float yPos = SpawningChunkData.maxBuildHeight - SpawningChunkData.blockSize/ 2;
 
-        renderDefaultLayer(chunk, xPos, yPos);
+        renderDefaultLayer(chunk, xPos, yPos, fireBlocks);
 
 		// if this chunk is in a tundra biome, then randomly add snow on top of the topmost blocks
 		if (chunkData.getBiome().Equals("Tundra"))
@@ -465,8 +467,58 @@ public class spawnChunkScript : MonoBehaviour
 		}
 	}
 
+	private IEnumerator renderFire(List<float[]> fireBlocks)
+	{
+		int i = 0;
+		foreach (float[] block in fireBlocks)
+		{
+			GameObject fireInstance = Instantiate(BlockHashtable.getBlockByID(66), new Vector2(block[0], block[1]), transform.rotation); // create block
 
-    private async void renderDefaultLayer(int[,] chunk, float xPos, float yPos)
+			// put the fire as a child of a block
+			GameObject parentBlock = getBlock(new Vector2(block[0], block[1] - block[2]));
+			if (parentBlock != null)
+			{
+				fireInstance.transform.parent = parentBlock.transform;
+			}
+			i++;
+			if (i % 5 == 0) yield return null;
+		}
+	}
+
+	private GameObject getBlock(Vector2 blockPos, bool firstTry = true)
+	{
+		ContactFilter2D filter = new ContactFilter2D();
+		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground"));
+
+		// Create a list to store the results
+		List<Collider2D> results = new List<Collider2D>();
+
+		// Check for overlaps
+		Physics2D.OverlapCircle(blockPos, 0.0001f, filter, results);
+
+		GameObject objToReturn = null;
+		foreach (Collider2D collider in results) // return the frontmost block
+		{
+			if (collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground")) return collider.gameObject;
+			if (collider.gameObject.layer == LayerMask.NameToLayer("Default")) objToReturn = collider.gameObject;
+			else if (objToReturn == null && collider.gameObject.layer == LayerMask.NameToLayer("BackBackground")) objToReturn = collider.gameObject;
+		}
+		if (objToReturn != null) return objToReturn;
+		if (!firstTry) return null;
+		// if we reach here, then there is no gameobject at this position (maybe a tile though)
+		Vector3Int tilePos = tilemap.WorldToCell(blockPos);
+		TileBase tile = tilemap.GetTile(tilePos);
+		if (tile != null)
+		{
+			spawnGameObjectInsteadOfTile(tile, tilePos); // place gameObject at tiles position
+			tilemap.SetTile(tilePos, null); // remove tile
+			return getBlock(blockPos, false);
+		}
+		return null;
+	}
+
+
+	private async void renderDefaultLayer(int[,] chunk, float xPos, float yPos, List<float[]> fireBlocks)
     {
 		TileBase[] tiles = new TileBase[chunk.GetLength(0) * chunk.GetLength(1)];
 		Vector3Int[] tilePositions = new Vector3Int[chunk.GetLength(0) * chunk.GetLength(1)];
@@ -502,6 +554,8 @@ public class spawnChunkScript : MonoBehaviour
 				}
 				waterToFlow = new HashSet<WaterScript>();
 			});
+
+			mainThreadDispatcher.enqueue(renderFire(fireBlocks));
 			
 		});
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 
@@ -45,7 +46,6 @@ public static class SpawningChunkData
 		{
 			case "Default":
 			case "Water":
-			case "Fire":
 				int[] indexes = worldPosToChunkArrayIndex(x, y, correspondingChunk.getChunkPosition());
 				correspondingChunk.changeBlock(indexes[0], indexes[1], newBlockID, layer);
 				break;
@@ -59,6 +59,19 @@ public static class SpawningChunkData
 				Debug.LogError("incorrect layer parameter: " + layer);
 				break;
 		}
+	}
+
+	public static void addOrRemoveFireBlock(float x, float y, int fireAttachement, bool add = true)
+	{
+		ChunkData correspondingChunk = renderedChunks[xPosToChunkPos(x)];
+		if (correspondingChunk == null)
+		{
+			Debug.LogError("Didn't find the chunk for a block at x position: " + x);
+			return;
+		}
+
+		if(add) correspondingChunk.addFireBlock(x, y, fireAttachement);
+		else correspondingChunk.removeFireBlock(x, y, fireAttachement);
 	}
 
 	/**
