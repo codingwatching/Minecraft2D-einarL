@@ -12,16 +12,15 @@ public class Cow : Animal
 		saySounds = new AudioClip[4];
 		health = 15;
 		base.Start();
-		//jumpPower = 11f;
 		initializeEntity();
 		initializeAudio();
 		StartCoroutine(decideIfMakeNoise());
 	}
 
-	public override void takeDamage(float damage, float playerXPos)
+	public override void takeDamage(float damage, float playerXPos, bool knockBack = true)
 	{
 		if (anim.GetBool("isDead")) return;
-		base.takeDamage(damage, playerXPos);
+		base.takeDamage(damage, playerXPos, knockBack);
 		makeHurtNoise();
 		if (health > 0)
 		{

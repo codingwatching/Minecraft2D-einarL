@@ -482,6 +482,7 @@ public class PlayerControllerScript : MonoBehaviour
 	public void die()
     {
         anim.SetBool("isDead", true);
+        transform.Find("Steve").Find("Fire").gameObject.SetActive(false);
     }
 
     public void goToSleep()

@@ -14,10 +14,10 @@ public class Pig : Animal
 		StartCoroutine(decideIfMakeNoise());
 	}
 
-	public override void takeDamage(float damage, float playerXPos)
+	public override void takeDamage(float damage, float playerXPos, bool knockBack = true)
 	{
 		if (anim.GetBool("isDead")) return;
-		base.takeDamage(damage, playerXPos);
+		base.takeDamage(damage, playerXPos, knockBack);
 		if (health <= 0)
 		{
 			makeDeathSound();

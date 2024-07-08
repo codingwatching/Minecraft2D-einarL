@@ -142,12 +142,12 @@ public abstract class Entity : MonoBehaviour
 
 
 
-	public virtual void takeDamage(float damage, float playerXPos)
+	public virtual void takeDamage(float damage, float playerXPos, bool knockBack = true)
 	{
 		if (anim.GetBool("isDead")) return;
 		health -= damage;
 		displayTint();
-		takeKnockBack(playerXPos);
+		if(knockBack) takeKnockBack(playerXPos);
 		if (health <= 0) die();
 		StartCoroutine(removeRedTint());
 	}

@@ -82,6 +82,7 @@ public class HealthbarScript : MonoBehaviour
     // updates the heart images to display how much health the player has left
     private void updateHeartImages()
     {
+        if (fullHeart == null) Start();
         int i;
         for (i = 0; i < Mathf.Floor(health/2f); i++)
         {

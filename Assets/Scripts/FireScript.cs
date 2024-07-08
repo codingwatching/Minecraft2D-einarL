@@ -110,4 +110,23 @@ public class FireScript : MonoBehaviour
 		}
 		return null;
 	}
+
+	private void OnTriggerEnter2D(Collider2D collision)
+	{
+		if (collision.gameObject.layer == LayerMask.NameToLayer("Entity") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+		{
+			// Find the child GameObject named "Fire" in the entire hierarchy
+			OnFireScript fire = collision.gameObject.GetComponentInChildren<OnFireScript>(true);
+
+			if (fire != null)
+			{
+				// Enable the "Fire" GameObject
+				fire.gameObject.SetActive(true);
+			}
+			else
+			{
+				Debug.LogWarning("Fire GameObject not found in children of " + collision.gameObject.name);
+			}
+		}
+	}
 }
