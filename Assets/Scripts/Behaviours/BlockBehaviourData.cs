@@ -169,7 +169,6 @@ public static class BlockBehaviourData
 			{"Snowball", new RightClickSnowball() },
 			{"Bow", new RightClickBow() },
 			{"Bucket", new RightClickBucket() },
-			{"FlintAndSteel", new RightClickFlintAndSteel() }
 		};
 
 

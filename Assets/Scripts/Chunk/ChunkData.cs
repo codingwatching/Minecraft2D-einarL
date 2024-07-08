@@ -71,7 +71,7 @@ public class ChunkData
 	}
 	public void removeFireBlock(float x, float y, int fireAttachment)
 	{
-		fireBlocks.RemoveAll(block => block[0] == x && block[1] == y && block[2] == fireAttachment);
+		fireBlocks.RemoveAll(block => block[0] == x && block[1] == y);
 	}
 
 

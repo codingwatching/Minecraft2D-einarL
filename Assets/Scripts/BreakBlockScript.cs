@@ -465,4 +465,21 @@ public class BreakBlockScript : MonoBehaviour
 		}
 		return false;
 	}
+
+	public void removeFire()
+	{
+		Vector2 blockPos = getRoundedMousePosition();
+		if (!isBlockWithinRange(blockPos)) return;
+
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(blockPos, 0.45f);
+
+		foreach (Collider2D col in colliders)
+		{
+			if (col.gameObject.layer == LayerMask.NameToLayer("Fire") && col.isTrigger)
+			{
+				SpawningChunkData.addOrRemoveFireBlock(col.transform.position.x, col.transform.position.y, 0, false);
+				Destroy(col.gameObject);
+			}
+		}
+	}
 }

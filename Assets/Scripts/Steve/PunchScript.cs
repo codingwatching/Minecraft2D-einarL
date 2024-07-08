@@ -56,6 +56,7 @@ public class PunchScript : MonoBehaviour
 			if (facingRight) anim.Play("fightFrontArm");
             else anim.Play("fightBackArm");
 		}
-        
+
+        breakScript.removeFire();
 	}
 }

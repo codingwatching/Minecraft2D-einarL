@@ -149,7 +149,9 @@ public class PlaceBlockScript : MonoBehaviour
     {
         List<GameObject> placedBlocks = placeBlock();
 
-        foreach(GameObject block in placedBlocks)
+        if (holdingItem != null && !holdingItem.name.Equals("Fire")) removeFire();
+
+		foreach (GameObject block in placedBlocks)
         {
 			// here we need to check if placedBlock is a special type of block which goes on the FrontBackground Layer
 			if (FrontBackgroundBlocks.isFrontBackgroundBlock(block.name)) // if its a "front background" block
@@ -161,6 +163,7 @@ public class PlaceBlockScript : MonoBehaviour
                 removeWater(block);
 				if(block.name.StartsWith("Water")) block.GetComponent<WaterScript>().startFlowing();
 			}
+
 
 			// update the chunkData
 			if (block != null) SpawningChunkData.updateChunkData(block.transform.position.x, block.transform.position.y, BlockHashtable.getIDByBlockName(block.name), LayerMask.LayerToName(block.layer));
@@ -243,6 +246,7 @@ public class PlaceBlockScript : MonoBehaviour
 		}
 		else placedBlocks = new List<GameObject>() { Instantiate(holdingItem, hoveringOverPosition, Quaternion.identity) }; // place block
 		if(!holdingItemName.Equals("Fire")) InventoryScript.decrementSlot(InventoryScript.getSelectedSlot()); // remove the block from the inventory
+
         if (placedBlocks.Count > 0 && placedBlocks[0].name.StartsWith("Water"))
         {
             InventoryScript.setSelectedSlotItem(new InventorySlot("Bucket"));
@@ -539,19 +543,31 @@ public class PlaceBlockScript : MonoBehaviour
 
 		// Check for overlaps
 		Physics2D.OverlapCircle(hoveringOverPosition, 0.45f, filter, results);
-        if (results.Count > 0)
-        {
-            foreach (Collider2D col in results)
-            {
-                if(!ReferenceEquals(col.gameObject, ignoredBlock))
-                {
-					Destroy(results[0].gameObject);
-                    deflowWater();
-				}
-            }
 
+        foreach (Collider2D col in results)
+        {
+            if(!ReferenceEquals(col.gameObject, ignoredBlock))
+            {
+				Destroy(col.gameObject);
+                deflowWater();
+			}
+        }
+	}
+
+	// removes fire if there is any at the cursors position
+	private void removeFire()
+	{
+		// Check for overlaps
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(hoveringOverPosition, 0.45f);
+
+		foreach (Collider2D col in colliders)
+		{
+			if (col.gameObject.layer == LayerMask.NameToLayer("Fire") && col.isTrigger)
+            {
+				SpawningChunkData.addOrRemoveFireBlock(col.transform.position.x, col.transform.position.y, 0, false);
+				Destroy(col.gameObject);
+			}
 		}
-		
 	}
 
 	// after placing a block on water, this function runs to make the water around it deflow

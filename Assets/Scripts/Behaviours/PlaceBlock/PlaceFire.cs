@@ -8,6 +8,7 @@ public class PlaceFire : PlaceBlockBehaviour
 {
 	private spawnChunkScript scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
 	private Tilemap tilemap = GameObject.Find("Grid").transform.Find("Tilemap").GetComponent<Tilemap>();
+	private AudioClip igniteSound = Resources.Load<AudioClip>("Sounds\\Random\\ignite");
 
 	public List<GameObject> placeBlock(GameObject blockToPlace, PlaceBlockScript pbScript, BreakBlockScript bbScript)
 	{
@@ -18,6 +19,9 @@ public class PlaceFire : PlaceBlockBehaviour
 		GameObject block = hoveredBlock == null ? blockBelow : hoveredBlock;
 		if (block != null)
 		{
+			
+			AudioSource.PlayClipAtPoint(igniteSound, blockToPlace.transform.position);
+
 			GameObject fireInstance = GameObject.Instantiate(BlockHashtable.getBlockByID(66), blockToPlace.transform.position, Quaternion.identity);
 			fireInstance.transform.parent = block.transform;
 

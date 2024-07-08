@@ -35,3 +35,5 @@ breaking bed removes the spawnpoint
 make player not be able to breathe underwater
 make fire take damage to entities
 bones, lava, tnt, flint and steel, pink tree biome, water in caves
+
+save data every 5 min
