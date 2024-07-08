@@ -300,7 +300,7 @@ public class spawnChunkScript : MonoBehaviour
     {
 		// Create a collision filter to only include colliders in these layers
 		ContactFilter2D filter = new ContactFilter2D();
-		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("Entity") | LayerMask.GetMask("Item") | LayerMask.GetMask("Water"));
+		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("Entity") | LayerMask.GetMask("Item") | LayerMask.GetMask("Water") | LayerMask.GetMask("Movable"));
 
 		List<Collider2D> results = getCollidersWithinChunk(chunkPos, filter);
 
@@ -309,8 +309,8 @@ public class spawnChunkScript : MonoBehaviour
 
 		foreach (Collider2D collider in results)
 		{
-			// add entites in this chunk to the list
-			if (collider.gameObject.layer == 10)
+			// add entites and movable in this chunk to the list
+			if (collider.gameObject.layer == 10 || collider.gameObject.layer == 14)
 			{
 				entities.Add(new object[] { collider.gameObject.transform.position.x, collider.gameObject.transform.position.y, collider.gameObject.name });
 			}
@@ -617,7 +617,8 @@ public class spawnChunkScript : MonoBehaviour
     {
         foreach (object[] entity in entities)
         {
-            Instantiate(Resources.Load<GameObject>("Prefabs\\Entities\\" + entity[2]), new Vector2((float)entity[0], (float)entity[1] + 1), Quaternion.identity);
+			if (FrontBackgroundBlocks.isMovable((string)entity[2])) Instantiate(Resources.Load<GameObject>("Prefabs\\Blocks\\" + entity[2]), new Vector2((float)entity[0], (float)entity[1] + 1), Quaternion.identity);
+			else Instantiate(Resources.Load<GameObject>("Prefabs\\Entities\\" + entity[2]), new Vector2((float)entity[0], (float)entity[1] + 1), Quaternion.identity);
 			yield return null;
         }
     }
@@ -780,10 +781,10 @@ public class spawnChunkScript : MonoBehaviour
                     }
 
                 }
-				else // if the entity is an animal
+				else // if the entity is an animal or movable
 				{
                     entities.Add(entity);
-                    amountOfAnimalsInChunk++;
+					if (FrontBackgroundBlocks.isMovable((string)entity[2]))amountOfAnimalsInChunk++;
                 }
 			}
 

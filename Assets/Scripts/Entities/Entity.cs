@@ -304,7 +304,7 @@ public abstract class Entity : MonoBehaviour
 	public bool isBlockInPath()
 	{
 		// if there is a block in the way && there is not a block above the block that is in the way
-		return Physics2D.OverlapCircle(lowerBlockCheck.position, 0.05f, LayerMask.GetMask("Default") | LayerMask.GetMask("Tilemap")) && !isPathBlocked();
+		return Physics2D.OverlapCircle(lowerBlockCheck.position, 0.05f, LayerMask.GetMask("Default") | LayerMask.GetMask("Tilemap") | LayerMask.GetMask("Movable")) && !isPathBlocked();
 	}
 
 	protected virtual IEnumerator decideIfMakeNoise()

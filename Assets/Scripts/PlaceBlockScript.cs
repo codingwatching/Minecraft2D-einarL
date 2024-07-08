@@ -147,7 +147,7 @@ public class PlaceBlockScript : MonoBehaviour
      */
     private void placeBlockInForeground()
     {
-        List<GameObject> placedBlocks = placeBlock();
+		List<GameObject> placedBlocks = placeBlock();
 
         if (holdingItem != null && !holdingItem.name.Equals("Fire")) removeFire();
 
@@ -164,9 +164,9 @@ public class PlaceBlockScript : MonoBehaviour
 				if(block.name.StartsWith("Water")) block.GetComponent<WaterScript>().startFlowing();
 			}
 
-
+            
 			// update the chunkData
-			if (block != null) SpawningChunkData.updateChunkData(block.transform.position.x, block.transform.position.y, BlockHashtable.getIDByBlockName(block.name), LayerMask.LayerToName(block.layer));
+			if (block != null && !LayerMask.LayerToName(block.layer).Equals("Movable")) SpawningChunkData.updateChunkData(block.transform.position.x, block.transform.position.y, BlockHashtable.getIDByBlockName(block.name), LayerMask.LayerToName(block.layer));
 
 
 			if (block.tag.Equals("FallType"))
@@ -188,7 +188,7 @@ public class PlaceBlockScript : MonoBehaviour
      */
 	private void placeBlockInBackground()
 	{
-        if (holdingItem.name.Equals("Water") || holdingItem.name.Equals("Fire")) return; // cant place water/fire in the background
+        if (holdingItem.name.Equals("Water") || holdingItem.name.Equals("Fire") || holdingItem.name.Equals("Boat")) return; // cant place water/fire in the background
 		List<GameObject> placedBlocks = placeBlock();
 
 		foreach (GameObject block in placedBlocks)

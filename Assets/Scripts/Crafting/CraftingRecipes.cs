@@ -497,6 +497,22 @@ public static class CraftingRecipes
 			new object[] { "IronIngot", new Vector2(-1, 1) },
 		}, new InventorySlot( new ToolInstance(getToolScriptable("FlintAndSteel")), "FlintAndSteel")
 		},
+
+		// boat
+		new object[]{ "PlankOak", new object[] {
+			new object[] { "PlankOak", new Vector2(1, 0) },
+			new object[] { "PlankOak", new Vector2(2, 0) },
+			new object[] { "PlankOak", new Vector2(0, 1) },
+			new object[] { "PlankOak", new Vector2(2, 1) },
+		}, new InventorySlot("Boat", 1)
+		},
+		new object[]{ "PlankSpruce", new object[] {
+			new object[] { "PlankSpruce", new Vector2(1, 0) },
+			new object[] { "PlankSpruce", new Vector2(2, 0) },
+			new object[] { "PlankSpruce", new Vector2(0, 1) },
+			new object[] { "PlankSpruce", new Vector2(2, 1) },
+		}, new InventorySlot("Boat", 1)
+		},
 	};
 
 	public static List<object[]> getRecipesByLeftBottomMostItem(string itemName)

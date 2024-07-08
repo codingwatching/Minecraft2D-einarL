@@ -48,6 +48,11 @@ public static class FrontBackgroundBlocks
 		{"Wool"}
 	};
 
+	private static HashSet<string> movable = new HashSet<string>()
+	{
+		{"Boat"}
+	};
+
 	public static bool isFallType(string blockName)
 	{
 		return fallTypes.Contains(blockName);
@@ -71,5 +76,10 @@ public static class FrontBackgroundBlocks
 	public static bool isBurnable(string blockName)
 	{
 		return burnableBlocks.Contains(blockName);
+	}
+
+	public static bool isMovable(string blockName)
+	{
+		return movable.Contains(blockName);
 	}
 }

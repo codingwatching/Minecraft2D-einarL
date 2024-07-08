@@ -168,6 +168,7 @@ public static class BlockHashtable
 			{ 64, getBlockWithName("Furnace")}, // furnace, but with the FurnaceOn texture
 			{ 65, getBlockWithName("TNT")},
 			{ 66, getBlockWithName("Fire")},
+			{ 67, getBlockWithName("Boat")},
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall
