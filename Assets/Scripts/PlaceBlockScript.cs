@@ -30,7 +30,6 @@ public class PlaceBlockScript : MonoBehaviour
     private Vector2 hoveringOverPosition; // the position that the mouse is hovering over, rounded to a potential block position
     private GameObject hoverTexture; // this is a texture for the hoverGrid
     private bool didPress = false; // true if the player pressed the right click button on the previous frame
-    private bool canPlaceAgain = true; // this needed so that the player cant continue holding right click to continue placing more blocks
     private float holdRightClickTimer = 0f;
     private float holdDownThreshold = 0.2f; // hold right click for this many seconds to place on background layer
     private float placingRange = 6f;
@@ -79,15 +78,13 @@ public class PlaceBlockScript : MonoBehaviour
 
         if(hoverGrid != null) // if we can place a block
         {
-            if (Input.GetMouseButton(1) && canPlaceAgain) // hold down right click
+            if (Input.GetMouseButton(1)) // hold down right click
             {
                 didPress = true;
                 holdRightClickTimer += Time.deltaTime;
                 if(holdRightClickTimer > holdDownThreshold)
                 {
                     didPress = false;
-                    canPlaceAgain = false;
-					holdRightClickTimer = 0;
                     // if the block to be placed is a NoFloatType && we can only place the float type block in the background layer
                     if (canPlaceInBackBackground())
                     {
@@ -125,7 +122,6 @@ public class PlaceBlockScript : MonoBehaviour
             }
             else if(!Input.GetMouseButton(1))
             {
-                canPlaceAgain = true;
 				holdRightClickTimer = 0;
 			}
         }

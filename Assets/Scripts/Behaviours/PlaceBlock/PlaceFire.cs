@@ -16,6 +16,11 @@ public class PlaceFire : PlaceBlockBehaviour
 
 		GameObject blockBelow = getBlock(new Vector2(blockToPlace.transform.position.x, blockToPlace.transform.position.y - 1f));
 		GameObject hoveredBlock = getBlock(blockToPlace.transform.position);
+		if(hoveredBlock != null && hoveredBlock.name.Equals("TNT"))
+		{
+			hoveredBlock.GetComponent<TNTScript>().ignite();
+			return new List<GameObject>() { };
+		}
 		GameObject block = hoveredBlock == null ? blockBelow : hoveredBlock;
 		if (block != null)
 		{
