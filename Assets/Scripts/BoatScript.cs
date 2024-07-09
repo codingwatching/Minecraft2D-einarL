@@ -79,6 +79,7 @@ public class BoatScript : MonoBehaviour, Interactable
 	// makes the player a child of the boat so that the player moves with the boat
 	public void attatchPlayerToBoat()
     {
+        if (isPlayerAttatched) return;
         messageScript.displayMessage("Press Left Control to get off the boat");
 
 		isPlayerAttatched = true;

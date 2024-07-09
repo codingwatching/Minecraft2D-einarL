@@ -343,6 +343,37 @@ public class spawnChunkScript : MonoBehaviour
 		// remove tiles
 		removeTilesInChunk(chunkPos);
 	}
+
+	public void saveWorldBeforeExiting()
+	{
+		int leftMostRenderedChunk = getLeftmostChunkPos(); // need to unrender this one and the 9 other chunks to the right
+
+		// i is chunk position
+		for (int i = leftMostRenderedChunk; i < leftMostRenderedChunk + (getAmountOfChunksRendered() * SpawningChunkData.blocksInChunk); i += SpawningChunkData.blocksInChunk)
+		{
+			// Create a collision filter to only include colliders in these layers
+			ContactFilter2D filter = new ContactFilter2D();
+			filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("Entity") | LayerMask.GetMask("Item") | LayerMask.GetMask("Water") | LayerMask.GetMask("Movable"));
+
+			List<Collider2D> results = getCollidersWithinChunk(i, filter);
+
+			List<object[]> entities = new List<object[]>();
+
+			foreach (Collider2D collider in results)
+			{
+				// add entites and movable in this chunk to the list
+				if (collider.gameObject.layer == 10 || collider.gameObject.layer == 14)
+				{
+					entities.Add(new object[] { collider.gameObject.transform.position.x, collider.gameObject.transform.position.y, collider.gameObject.name });
+				}
+			}
+
+			SpawningChunkData.overwriteEntities(i, entities); // save entities
+
+			SpawningChunkData.removeAndSaveChunkByChunkPosition(i); // save
+		}
+	}
+
 	/**
 	 * when we unrender a chunk we need to add the water by the chunk edge on the left/right-most chunk (not the chunk being unrendered but the one next to it)
 	 * to the observer list so that the water will then be notified to flow again when the chunk (that was being unrendered)

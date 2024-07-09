@@ -12,10 +12,10 @@ public abstract class Entity : MonoBehaviour
 	protected bool isWalking = false;
 	protected bool justWalked = false; // so that it doesnt decide to walk again immediately after finishing walking
 	protected Vector3 direction;
-	protected int[] walkingTime = new int[] { 1,5}; // min and max walking time
+	protected int[] walkingTime = new int[] { 1, 5 }; // min and max walking time
 	protected float health = 10;
 	protected float makeNoiseChance = 0.04f;
-	protected bool isSwimming = false;
+	public bool isSwimming { get; protected set; } = false;
 
 	//public AudioClip[] stepSounds = new AudioClip[5];
 	protected AudioClip[] saySounds = new AudioClip[3];
@@ -77,6 +77,8 @@ public abstract class Entity : MonoBehaviour
 			if (isInWater())
 			{
 				toggleSwimmingPhysics();
+				// remove fire, if any
+				GetComponentInChildren<OnFireScript>(true).gameObject.SetActive(false);
 			}
 		}
 		else if (!isInWater()) // if the entity got out of the water

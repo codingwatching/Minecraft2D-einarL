@@ -115,6 +115,8 @@ public class FireScript : MonoBehaviour
 	{
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Entity") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
+			if (collision.gameObject.layer == LayerMask.NameToLayer("Entity") && collision.GetComponent<Entity>().isSwimming) return;
+			if (collision.gameObject.layer == LayerMask.NameToLayer("Player") && collision.GetComponent<PlayerControllerScript>().isSwimming) return;
 			// Find the child GameObject named "Fire" in the entire hierarchy
 			OnFireScript fire = collision.gameObject.GetComponentInChildren<OnFireScript>(true);
 

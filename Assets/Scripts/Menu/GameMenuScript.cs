@@ -43,11 +43,6 @@ public class GameMenuScript : MonoBehaviour
     private void unrenderAndSaveChunks()
     {
         spawnChunkScript scScript = GameObject.Find("Main Camera").transform.GetComponent<spawnChunkScript>();
-		int leftMostRenderedChunk = scScript.getLeftmostChunkPos(); // need to unrender this one and the 9 other chunks to the right
-
-		for (int i = leftMostRenderedChunk; i < leftMostRenderedChunk + (scScript.getAmountOfChunksRendered() * SpawningChunkData.blocksInChunk); i += SpawningChunkData.blocksInChunk)
-		{
-			scScript.unrenderChunk(i); // unrender chunk, this also saves the chunk
-		}
+        scScript.saveWorldBeforeExiting();
 	}
 }

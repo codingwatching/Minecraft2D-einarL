@@ -36,6 +36,7 @@ public class WaterScript : MonoBehaviour
         foreach (Collider2D collider in results) {
             if(!ReferenceEquals(collider.gameObject, gameObject)) Destroy(collider.gameObject);
 		}
+        removeFire();
 	}
 
     public void setFlow(bool flowing)
@@ -318,6 +319,21 @@ public class WaterScript : MonoBehaviour
 	private BlockType getLeftBlock()
 	{
 		return getBlockAtPosition(new Vector2(transform.position.x - 1, transform.position.y));
+	}
+
+	private void removeFire()
+	{
+		// Check for overlaps
+		Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.45f);
+
+		foreach (Collider2D col in colliders)
+		{
+			if (col.gameObject.layer == LayerMask.NameToLayer("Fire") && col.isTrigger)
+			{
+				SpawningChunkData.addOrRemoveFireBlock(col.transform.position.x, col.transform.position.y, 0, false);
+				Destroy(col.gameObject);
+			}
+		}
 	}
 
 }

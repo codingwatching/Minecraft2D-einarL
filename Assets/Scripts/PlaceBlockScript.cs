@@ -232,6 +232,7 @@ public class PlaceBlockScript : MonoBehaviour
 	//helper function that both placeBlockInForeground() and placeBlockInBackground() use
 	private List<GameObject> placeBlock()
     {
+        if (holdingItem.name.Equals("Fire") && isWaterAtPosition()) return new List<GameObject>();
 		makePlaceBlockSound();
         string holdingItemName = holdingItem.name;
 		PlaceBlockBehaviour pbBehaviour = BlockHashtable.getPlaceBlockBehaviour(holdingItem.name);
@@ -557,6 +558,12 @@ public class PlaceBlockScript : MonoBehaviour
                 deflowWater();
 			}
         }
+	}
+
+    private bool isWaterAtPosition()
+    {
+        return Physics2D.OverlapCircle(hoveringOverPosition, 0.45f, LayerMask.GetMask("Water"));
+
 	}
 
 	// removes fire if there is any at the cursors position

@@ -9,13 +9,13 @@ public class PlayerControllerScript : MonoBehaviour
     private Rigidbody2D rb;
     private Transform groundCheck;
     private Transform blockNextToPlayerLeft;
-	private Transform blockNextToPlayerRight;
+    private Transform blockNextToPlayerRight;
     private Transform steve; // character
     private Transform head;
     private Transform holdingItemObject; // the object that displays which item the player is holding
     private SpriteRenderer holdingItemObjectSpriteRenderer;
     private SpriteRenderer AnimatedItemSpriteRenderer;
-	private Camera cam;
+    private Camera cam;
     private StepSoundScript stepSoundScript;
     private CapsuleCollider2D capCollider;
     private Vector2 defaultColliderSize;
@@ -23,22 +23,22 @@ public class PlayerControllerScript : MonoBehaviour
     public Tilemap tilemap;
 
 
-	private AudioClip splashSmall;
-	private AudioClip splashBig;
+    private AudioClip splashSmall;
+    private AudioClip splashBig;
 
-	private float walkSpeed = 6;
-	private float runSpeed = 10;
-	private float jumpPower = 12f; // how high you jump
+    private float walkSpeed = 6;
+    private float runSpeed = 10;
+    private float jumpPower = 12f; // how high you jump
     private float jumpBoost;
-	private float jumpBoostWhenWalking = 1.5f; // extra speed horizontally
-	private float jumpBoostWhenRunning = 1.2f;
-	private float speed; // this will change to runSpeed when runnning and walkSpeed when walking
+    private float jumpBoostWhenWalking = 1.5f; // extra speed horizontally
+    private float jumpBoostWhenRunning = 1.2f;
+    private float speed; // this will change to runSpeed when runnning and walkSpeed when walking
     private bool isJumping = false;
     private bool isOnLadder = false;
     private LadderType ladderType = LadderType.Center; // what kind of ladder the player is next to
     private bool isInAirAfterJumping = false;
     private bool facingRight = true;
-    private bool isSwimming = false;
+    public bool isSwimming { get; private set; } = false;
 	private float animationRunningSpeed = 1.5f;
     private string blockBelowPlayer; // the block name that the player is standing on
     public bool isInBoat = false;
@@ -220,6 +220,9 @@ public class PlayerControllerScript : MonoBehaviour
             {
 				AudioSource.PlayClipAtPoint(splashBig, transform.position);
 			}
+
+            // remove fire, if any
+            transform.Find("Steve").Find("Fire").gameObject.SetActive(false);
         }
         else
         {
