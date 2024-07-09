@@ -54,7 +54,10 @@ public class BreakBlockScript : MonoBehaviour
 		{
 			if (Input.GetMouseButtonDown(1) && !Input.GetKey(KeyCode.LeftControl)) // if right click
 			{
-				if (hoveringOverBlock is GameObject) ((GameObject)hoveringOverBlock).GetComponent<BlockScript>().rightClick(); // call right click method on the block
+				if (hoveringOverBlock is GameObject)
+				{
+					((GameObject)hoveringOverBlock).GetComponent<Interactable>().rightClick(); // call right click method on the block
+				}
 				else if (hoveringOverBlock != null) // if its a tile
 				{
 					spawnGameObjectInsteadOfTile(new Vector3Int((int)(prevTilePosition.x - .5f), (int)(prevTilePosition.y - .5f)));
@@ -151,7 +154,7 @@ public class BreakBlockScript : MonoBehaviour
 				isBreaking = true;
 				miningBlock = gameObjectToBreak;
 				ToolInstance heldTool = InventoryScript.getHeldTool(); // get the tool that the player is holding
-				gameObjectToBreak.GetComponent<BlockScript>().mineBlock(heldTool);
+				gameObjectToBreak.GetComponent<Interactable>().mineBlock(heldTool);
 				doPunchAnimation();
 			}
 
@@ -162,7 +165,7 @@ public class BreakBlockScript : MonoBehaviour
 		{
 			if (miningBlock != null)
 			{
-				miningBlock.GetComponent<BlockScript>().stopMining();
+				miningBlock.GetComponent<BlockScript>()?.stopMining();
 				miningBlock = null;
 			}
 			isBreaking = false;
@@ -232,7 +235,7 @@ public class BreakBlockScript : MonoBehaviour
 		List<Collider2D> blockToBreak = new List<Collider2D>();
 
 		filter = new ContactFilter2D();
-		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground")); // only blocks on layer "Default" or "FrontBackground" or "BackBackground"
+		filter.SetLayerMask(LayerMask.GetMask("Default") | LayerMask.GetMask("FrontBackground") | LayerMask.GetMask("BackBackground") | LayerMask.GetMask("Movable")); // only blocks on layer "Default" or "FrontBackground" or "BackBackground"
 
 		// Check for overlaps
 		Physics2D.OverlapCircle(worldMousePos, 0.40f, filter, blockToBreak);
@@ -242,8 +245,8 @@ public class BreakBlockScript : MonoBehaviour
 			GameObject objectToReturn = null;
 			for (int i = 0; i < blockToBreak.Count; i++)
 			{
-
-				if (blockToBreak[i].gameObject.layer == LayerMask.NameToLayer("Default")) objectToReturn =  blockToBreak[i].gameObject;
+				if (blockToBreak[i].gameObject.layer == LayerMask.NameToLayer("Movable")) return blockToBreak[i].gameObject;
+				else if (blockToBreak[i].gameObject.layer == LayerMask.NameToLayer("Default")) objectToReturn = blockToBreak[i].gameObject;
 				else if (objectToReturn == null && blockToBreak[i].gameObject.layer == LayerMask.NameToLayer("FrontBackground")) objectToReturn = blockToBreak[i].gameObject;
 				else if (objectToReturn == null && blockToBreak[i].gameObject.name.StartsWith("Door")) objectToReturn = blockToBreak[i].gameObject;
 				else if (objectToReturn == null && highestPriority.Contains(blockToBreak[i].gameObject.name)) objectToReturn = blockToBreak[i].gameObject;
@@ -456,7 +459,11 @@ public class BreakBlockScript : MonoBehaviour
 	public bool isHoveredBlockRightClickable()
 	{
 		if (hoveringOverBlock == null) return false;
-		if (hoveringOverBlock is GameObject) return ((GameObject)hoveringOverBlock).GetComponent<BlockScript>().isRightClickable();
+		if (hoveringOverBlock is GameObject)
+		{
+			if (((GameObject)hoveringOverBlock).layer == 14) return true;
+			return ((GameObject)hoveringOverBlock).GetComponent<BlockScript>().isRightClickable();
+		}
 		else if (hoveringOverBlock != null) // if its a tile
 		{
 			spawnGameObjectInsteadOfTile(new Vector3Int((int)(prevTilePosition.x - .5f), (int)(prevTilePosition.y - .5f)));

@@ -129,7 +129,6 @@ public class PlaceBlockScript : MonoBehaviour
 				holdRightClickTimer = 0;
 			}
         }
-
     }
 
     private void makePlaceBlockSound()
@@ -158,7 +157,7 @@ public class PlaceBlockScript : MonoBehaviour
 			{
 				block.layer = LayerMask.NameToLayer("FrontBackground");
 			}
-            else // remove water if there is any at this position
+            else if(block.layer < 13) // remove water if there is any at this position
             {
                 removeWater(block);
 				if(block.name.StartsWith("Water")) block.GetComponent<WaterScript>().startFlowing();
@@ -431,6 +430,12 @@ public class PlaceBlockScript : MonoBehaviour
      */
 	private bool checkIfPlaceable(GameObject futureBlockPos)
     {
+        if(futureBlockPos.layer == 14)
+        {
+			bool raycastSuccess = raycast(head.transform.position, futureBlockPos.transform.position) || raycast(torso.transform.position, futureBlockPos.transform.position) || raycast(new Vector2(head.transform.position.x, head.transform.position.y + 1.5f), futureBlockPos.transform.position);
+			if (!raycastSuccess) return false;
+            return true;
+		}
         if (futureBlockPos.layer != 13) // if its not fire
         {
 			// cast a ray from the players head and torso to check if the ray can get to the block's position

@@ -21,8 +21,6 @@ public class PlayerControllerScript : MonoBehaviour
     private Vector2 defaultColliderSize;
     private Vector2 sleepingColliderSize;
     public Tilemap tilemap;
-    private Transform moveWithTransform = null; // e.g. a boat that the player is standing on, so the player moves when the boat moves
-    private Vector3 previousPosition;
 
 
 	private AudioClip splashSmall;
@@ -43,6 +41,7 @@ public class PlayerControllerScript : MonoBehaviour
     private bool isSwimming = false;
 	private float animationRunningSpeed = 1.5f;
     private string blockBelowPlayer; // the block name that the player is standing on
+    public bool isInBoat = false;
 
     private bool didFall = false; // used to know when the player hits the ground after falling
     private float fellFrom = float.NegativeInfinity; // how high the player fell from, this is a y value in the world space
@@ -101,12 +100,9 @@ public class PlayerControllerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if (moveWithTransform != null)
-		{
-			moveWithMovableObject();
-		}
-
 		if (InventoryScript.getIsInUI() || anim.GetBool("isSleeping")) return; // if user is in the UI or if steve is sleeping, then we cant move
+		lookTowardsMouse();
+        if (isInBoat) return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal"); // -1: left, 0: still, 1: right
 
@@ -196,7 +192,6 @@ public class PlayerControllerScript : MonoBehaviour
         }
 
         checkIfRunning();
-        lookTowardsMouse();
 	}
 
 	private void LateUpdate()
@@ -306,39 +301,15 @@ public class PlayerControllerScript : MonoBehaviour
             if (results[0].gameObject.layer == LayerMask.NameToLayer("Default")) // if its a gameObject (because GameObjects are on the default layer)
             {
                 blockBelowPlayer = results[0].gameObject.name;
-                if(moveWithTransform != null)
-                {
-					moveWithTransform = null;
-				}
             }
-            else if (results[0].gameObject.layer == LayerMask.NameToLayer("Movable")) // e.g. boat
-            {
-                if(moveWithTransform == null)
-                {
-					moveWithTransform = results[0].transform;
-					previousPosition = moveWithTransform.position;
-				}
-			}
             else // if its on the Tilemap layer
             {
 				blockBelowPlayer = (tilemap.GetTile(tilemap.WorldToCell(new Vector2(groundCheck.position.x, groundCheck.position.y - 0.5f))) as Tile)?.sprite.name;
-				if (moveWithTransform != null)
-				{
-					moveWithTransform = null;
-				}
 			}
             
         }
 
         return isGrounded;
-    }
-
-    private void moveWithMovableObject()
-    {
-        Vector3 offset = previousPosition - moveWithTransform.position;
-        transform.position = new Vector2(transform.position.x-offset.x, transform.position.y);
-
-        previousPosition = moveWithTransform.position;
     }
 
 
@@ -364,7 +335,17 @@ public class PlayerControllerScript : MonoBehaviour
 		contactFilter.useLayerMask = true;
 
 		int count = Physics2D.OverlapCircle(new Vector2(groundCheck.position.x, groundCheck.position.y - 0.5f), 0.01f, contactFilter, results);
-		return count > 0;
+		if(count > 0)
+        {
+			contactFilter = new ContactFilter2D();
+			contactFilter.layerMask = LayerMask.GetMask("Movable");
+			contactFilter.useLayerMask = true;
+
+			count = Physics2D.OverlapCircle(new Vector2(groundCheck.position.x, groundCheck.position.y - 0.5f), 0.4f, contactFilter, results);
+            if (count > 0) return false;
+            return true;
+		}
+        return false;
 	}
 
 	/**

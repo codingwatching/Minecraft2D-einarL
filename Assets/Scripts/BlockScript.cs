@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class BlockScript : MonoBehaviour
+public class BlockScript : MonoBehaviour, Interactable
 {
     private bool isMining = false;
 	private ToolInstance toolBreakingWith = null; // this is the tool that the player is using to break this block
