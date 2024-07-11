@@ -91,7 +91,7 @@ public class ArrowScript : MonoBehaviour
 		}
 		else if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
-			GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage(Mathf.RoundToInt(damage));
+			GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage(Mathf.RoundToInt(damage), transform.position.x);
 			Transform playerHead = collision.transform.Find("Steve").Find("Head").transform;
 			if (transform.position.y >= playerHead.position.y) transform.parent = playerHead.transform;
 		}
@@ -123,7 +123,7 @@ public class ArrowScript : MonoBehaviour
 
 	private IEnumerator removeColliderIgnore(Collider2D collider)
 	{
-		yield return new WaitForSeconds(0.5f);
+		yield return new WaitForSeconds(0.7f);
 		if (arrowCollider != null) Physics2D.IgnoreCollision(arrowCollider.GetComponent<Collider2D>(), collider, false); // enable collision with "collider"
 	}
 

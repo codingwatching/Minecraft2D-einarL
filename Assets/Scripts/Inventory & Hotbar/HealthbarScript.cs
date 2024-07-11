@@ -67,11 +67,12 @@ public class HealthbarScript : MonoBehaviour
 		StartCoroutine(healUp());
 	}
 
-	public void takeDamage(int damage, bool armorProtectsPlayer = true)
+	public void takeDamage(int damage, float enemyXPos, bool knockBack = true, bool armorProtectsPlayer = true)
     {
         if (armorProtectsPlayer) health -= armorScript.getReducedDamage(damage);
 		else health -= damage;
 
+        if (knockBack) playerControllerScript.takeKnockback(enemyXPos);
 		updateHeartImages();
         playDamageSound();
         displayTint();
@@ -160,7 +161,7 @@ public class HealthbarScript : MonoBehaviour
     {
         while (isTakingHungerDamage)
         {
-            if (health > 1) takeDamage(1, false);
+            if (health > 1) takeDamage(1, 0, false, false);
             yield return new WaitForSeconds(2);
         }
     }

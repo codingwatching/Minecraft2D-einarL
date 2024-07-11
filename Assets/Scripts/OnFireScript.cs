@@ -36,7 +36,7 @@ public class OnFireScript : MonoBehaviour
     {
         while (true)
         {
-            if (isPlayer) healthbarScript.takeDamage(1, false);
+            if (isPlayer) healthbarScript.takeDamage(1, 0, false, false);
             else entityScript.takeDamage(1, transform.position.x, false);
             yield return new WaitForSeconds(1.7f);
         }

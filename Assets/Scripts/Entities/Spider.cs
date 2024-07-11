@@ -49,7 +49,7 @@ public class Spider : Mob
 		{
 			if (base.canHurtPlayer())
 			{
-				healthbarScript.takeDamage(damage); // make player take damage
+				healthbarScript.takeDamage(damage, transform.position.x); // make player take damage
 				isAttacking = false;
 				if (resetAttackVariableCoroutine != null)
 				{

@@ -24,7 +24,7 @@ public class Desert : Biome
 	 */
 	public override object[] renderLine(float startHeight, float xPos, int xIndex, int chunkPos, Hashtable prevLineOreSpawns, float prevLineHeight, int[] prevVerticalLine)
 	{
-		List<float[]> frontBackgroundLayerBlocks = new List<float[]>();
+		List<float[]> frontBackgroundLayerBlocks;
 		int blockIndex = maxBuildHeight - (int)startHeight; // start blockIndex for the first block
 		float yPos = blockIndexToYPosition(blockIndex - 1);
 

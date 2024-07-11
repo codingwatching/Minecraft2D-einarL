@@ -42,11 +42,13 @@ public class PlayerControllerScript : MonoBehaviour
 	private float animationRunningSpeed = 1.5f;
     private string blockBelowPlayer; // the block name that the player is standing on
     public bool isInBoat = false;
+    private bool isUnderwater = false;
 
     private bool didFall = false; // used to know when the player hits the ground after falling
     private float fellFrom = float.NegativeInfinity; // how high the player fell from, this is a y value in the world space
     private HealthbarScript healthbarScript;
     private HungerbarScript hungerbarScript;
+    private GameObject bubblebar;
     private SleepScript sleepScript;
 	private IDataService dataService = JsonDataService.Instance;
 
@@ -79,6 +81,7 @@ public class PlayerControllerScript : MonoBehaviour
 
 		healthbarScript = GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>();
 		hungerbarScript = GameObject.Find("Canvas").transform.Find("Hungerbar").GetComponent<HungerbarScript>();
+		bubblebar = GameObject.Find("Canvas").transform.Find("Bubblebar").gameObject;
 		sleepScript = GameObject.Find("Canvas").transform.Find("SleepTint").GetComponent<SleepScript>();
 
 		if (dataService.exists("player-position.json")) // if there is a saved player position, then teleport the player to that position
@@ -191,14 +194,33 @@ public class PlayerControllerScript : MonoBehaviour
             swimmingControls();
         }
 
+        if(!isUnderwater && checkIfUnderWater())
+        {
+            isUnderwater = true;
+            bubblebar.SetActive(true);
+        }
+        else if(isUnderwater && !checkIfUnderWater())
+        {
+            isUnderwater = false;
+            bubblebar.SetActive(false);
+        }
+
+
         checkIfRunning();
 	}
 
-	private void LateUpdate()
-	{
+    // checks if the players head is underwater
+    private bool checkIfUnderWater()
+    {
+		Collider2D[] results = new Collider2D[1];
 
+		ContactFilter2D contactFilter = new ContactFilter2D();
+		contactFilter.layerMask = LayerMask.GetMask("Water");
+		contactFilter.useLayerMask = true;
+
+		int count = Physics2D.OverlapCircle(head.position, 0.01f, contactFilter, results);
+		return count > 0;
 	}
-
 
 	private void toggleSwimmingPhysics(bool on = true)
     {
@@ -251,7 +273,15 @@ public class PlayerControllerScript : MonoBehaviour
 		else rb.velocity = new Vector2(horizontalMove * speed, rb.velocity.y);
 	}
 
-    private void checkIfRunning()
+    public void takeKnockback(float enemyXPos)
+    {
+		bool knockBackRight = enemyXPos < transform.position.x;
+		if (knockBackRight) rb.velocity = new Vector2(15, 5);
+		else rb.velocity = new Vector2(-15, 5);
+	}
+
+
+	private void checkIfRunning()
     {
         if (!hungerbarScript.canRun()) // if player cant run due to hunger
         {
@@ -442,7 +472,7 @@ public class PlayerControllerScript : MonoBehaviour
         fallHeight -= 3; // only take damage if fell from 4 blocks or more
         if (fallHeight > 0) // if we need to reduce health
         {
-            healthbarScript.takeDamage(fallHeight, false);
+            healthbarScript.takeDamage(fallHeight, 0, false, false);
         }
         fellFrom = float.NegativeInfinity;
     }

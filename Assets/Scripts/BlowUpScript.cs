@@ -47,7 +47,7 @@ public class BlowUpScript
 				float damageTaken = blastBaseDamage / divisor;
 
 				if (collider.gameObject.layer == LayerMask.NameToLayer("Entity")) collider.GetComponent<Entity>().takeDamage(damageTaken, position.x);
-				else GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage((int)damageTaken);
+				else GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage((int)damageTaken, position.x);
 			}
 			else if (collider.gameObject.layer == LayerMask.NameToLayer("Default") || collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground") || collider.gameObject.layer == LayerMask.NameToLayer("BackBackground"))
 			{

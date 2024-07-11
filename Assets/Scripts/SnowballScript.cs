@@ -32,7 +32,7 @@ public class SnowballScript : MonoBehaviour
         }
 		else if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
-			GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage(1);
+			GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>().takeDamage(1, transform.position.x);
 		}
 		// TODO: make particle system for the snowball
 		Destroy(gameObject);

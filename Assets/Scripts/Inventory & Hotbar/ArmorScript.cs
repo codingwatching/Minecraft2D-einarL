@@ -91,13 +91,13 @@ public class ArmorScript : MonoBehaviour
 			ArmorImages[i].sprite = armorFullImage;
 			ArmorImages[i].color = new Color(1, 1, 1, 1); // make visible
 		}
-		if (totalArmor % 2 != 0) // if totalArmor is an odd number, then we need to display half a heart
+		if (totalArmor % 2 != 0) // if totalArmor is an odd number, then we need to display half an armor
 		{
 			ArmorImages[i].sprite = armorHalfImage;
 			ArmorImages[i].color = new Color(1, 1, 1, 1);
 			i++;
 		}
-		for (; i < 10; i++) // no fill image for the rest of the hearts
+		for (; i < 10; i++) // no fill image for the rest of the armors
 		{
 			ArmorImages[i].sprite = armorEmptyImage;
 			ArmorImages[i].color = new Color(1, 1, 1, 1);

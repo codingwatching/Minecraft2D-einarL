@@ -129,7 +129,7 @@ public abstract class Mob : Entity
 			if (healthbarScript.getHealth() > 0)
 			{
 				anim.Play("punch"); // play punch animation
-				healthbarScript.takeDamage(damage); // make player take damage
+				healthbarScript.takeDamage(damage, transform.position.x); // make player take damage
 				yield return new WaitForSeconds(1.5f);
 			}
 			else break;
