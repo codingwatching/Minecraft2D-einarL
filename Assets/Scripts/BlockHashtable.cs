@@ -100,6 +100,7 @@ public static class BlockHashtable
 			{ 65, getBlockTileWithName("TNT")},
 			{ 68, getBlockTileWithName("LogCherry")},
 			{ 69, getBlockTileWithName("LeavesCherry")},
+			{ 75, getBlockTileWithName("PlankCherry")},
 		};
 		// id's in blockTiles and blocks hashtable need to be the same for each block
 		blocks = new Hashtable()
@@ -178,6 +179,7 @@ public static class BlockHashtable
 			{ 72, getBlockWithName("TulipPink")},
 			{ 73, getBlockWithName("TulipRed")},
 			{ 74, getBlockWithName("TulipWhite")},
+			{ 75, getBlockWithName("PlankCherry")},
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall
@@ -196,6 +198,7 @@ public static class BlockHashtable
 		{
 			{"PlankOak", 0}, // 0 is wood sound
 			{"PlankSpruce", 0},
+			{"PlankCherry", 0},
 			{"LogOak", 0},
 			{"LogSpruce", 0},
 			{"LogCherry", 0},

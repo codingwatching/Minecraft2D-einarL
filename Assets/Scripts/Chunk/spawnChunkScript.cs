@@ -678,9 +678,21 @@ public class spawnChunkScript : MonoBehaviour
 
         if (layer.Equals("BackBackground"))
         {
-			SpriteRenderer blockRenderer = spawnedBlock.GetComponent<SpriteRenderer>();
-			blockRenderer.color = new Color(170f / 255f, 170f / 255f, 170f / 255f); // dark tint
-			blockRenderer.sortingOrder = -10;
+			if (spawnedBlock.name.Equals("Chest")) // chests are made with multiple sprites so we need to do this
+			{
+				SpriteRenderer[] childSprites = spawnedBlock.GetComponentsInChildren<SpriteRenderer>();
+				foreach (SpriteRenderer childSprite in childSprites)
+				{
+					childSprite.color = new Color(170f / 255f, 170f / 255f, 170f / 255f); // dark tint
+					childSprite.sortingOrder -= 9;
+				}
+			}
+			else
+			{
+				SpriteRenderer blockRenderer = spawnedBlock.GetComponent<SpriteRenderer>();
+				blockRenderer.color = new Color(170f / 255f, 170f / 255f, 170f / 255f); // dark tint
+				blockRenderer.sortingOrder = -10;
+			}
 		}
 
 		if (layer.Equals("Water")) waterToFlow.Add(spawnedBlock.GetComponent<WaterScript>());

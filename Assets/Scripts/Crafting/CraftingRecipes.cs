@@ -17,10 +17,12 @@ public static class CraftingRecipes
 		// planks
 		new object[]{"LogOak", new object[] {}, new InventorySlot("PlankOak",4) },
 		new object[]{"LogSpruce", new object[] {}, new InventorySlot("PlankSpruce",4) },
+		new object[]{"LogCherry", new object[] {}, new InventorySlot("PlankCherry",4) },
 
 		// sticks
 		new object[]{"PlankOak", new object[] { new object[] { "PlankOak", new Vector2(0, 1) } }, new InventorySlot("Stick", 4) },
 		new object[]{"PlankSpruce", new object[] { new object[] { "PlankSpruce", new Vector2(0, 1) } }, new InventorySlot("Stick", 4) },
+		new object[]{"PlankCherry", new object[] { new object[] { "PlankCherry", new Vector2(0, 1) } }, new InventorySlot("Stick", 4) },
 
 		// crafting table
 		new object[]{ "PlankOak", new object[] {
@@ -33,6 +35,12 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(1, 0) },
 			new object[] { "PlankSpruce", new Vector2(0, 1) },
 			new object[] { "PlankSpruce", new Vector2(1, 1) }
+		}, new InventorySlot("CraftingTable", 1)
+		},
+		new object[]{ "PlankCherry", new object[] {
+			new object[] { "PlankCherry", new Vector2(1, 0) },
+			new object[] { "PlankCherry", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(1, 1) }
 		}, new InventorySlot("CraftingTable", 1)
 		},
 
@@ -53,6 +61,7 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(1, 2) },
 		}, new InventorySlot("DoorSpruce", 1)
 		},
+		// TODO: DoorCherry
 
 		// wooden tools
 		new object[]{ "Stick", new object[] {
@@ -63,6 +72,11 @@ public static class CraftingRecipes
 		new object[]{ "Stick", new object[] {
 			new object[] { "Stick", new Vector2(0, 1) },
 			new object[] { "PlankSpruce", new Vector2(0, 2) }
+		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodShovel")), "WoodShovel")
+		},
+		new object[]{ "Stick", new object[] {
+			new object[] { "Stick", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(0, 2) }
 		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodShovel")), "WoodShovel")
 		},
 
@@ -80,6 +94,13 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(1, 2) }
 		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodAxe")), "WoodAxe")
 		},
+		new object[]{ "Stick", new object[] {
+			new object[] { "Stick", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(1, 1) },
+			new object[] { "PlankCherry", new Vector2(0, 2) },
+			new object[] { "PlankCherry", new Vector2(1, 2) }
+		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodAxe")), "WoodAxe")
+		},
 
 		new object[]{ "Stick", new object[] {
 			new object[] { "PlankOak", new Vector2(-1, 1) },
@@ -93,6 +114,13 @@ public static class CraftingRecipes
 			new object[] { "Stick", new Vector2(0, 1) },
 			new object[] { "PlankSpruce", new Vector2(-1, 2) },
 			new object[] { "PlankSpruce", new Vector2(0, 2) }
+		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodAxe")), "WoodAxe")
+		},
+		new object[]{ "Stick", new object[] {
+			new object[] { "PlankCherry", new Vector2(-1, 1) },
+			new object[] { "Stick", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(-1, 2) },
+			new object[] { "PlankCherry", new Vector2(0, 2) }
 		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodAxe")), "WoodAxe")
 		},
 
@@ -110,6 +138,13 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(1, 2) }
 		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodPickaxe")), "WoodPickaxe")
 		},
+		new object[]{ "Stick", new object[] {
+			new object[] { "Stick", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(-1, 2) },
+			new object[] { "PlankCherry", new Vector2(0, 2) },
+			new object[] { "PlankCherry", new Vector2(1, 2) }
+		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodPickaxe")), "WoodPickaxe")
+		},
 
 		new object[]{ "Stick", new object[] {
 			new object[] { "PlankOak", new Vector2(0, 1) },
@@ -119,6 +154,11 @@ public static class CraftingRecipes
 		new object[]{ "Stick", new object[] {
 			new object[] { "PlankSpruce", new Vector2(0, 1) },
 			new object[] { "PlankSpruce", new Vector2(0, 2) }
+		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodSword")), "WoodSword")
+		},
+		new object[]{ "Stick", new object[] {
+			new object[] { "PlankCherry", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(0, 2) }
 		}, new InventorySlot( new ToolInstance(getToolScriptable("WoodSword")), "WoodSword")
 		},
 
@@ -273,6 +313,14 @@ public static class CraftingRecipes
 		new object[]{ "PlankSpruce", new object[] {
 			new object[] { "PlankSpruce", new Vector2(1, 0) },
 			new object[] { "PlankSpruce", new Vector2(2, 0) },
+			new object[] { "Wool", new Vector2(0, 1) },
+			new object[] { "Wool", new Vector2(1, 1) },
+			new object[] { "Wool", new Vector2(2, 1) }
+		}, new InventorySlot("Bed", 1)
+		},
+		new object[]{ "PlankCherry", new object[] {
+			new object[] { "PlankCherry", new Vector2(1, 0) },
+			new object[] { "PlankCherry", new Vector2(2, 0) },
 			new object[] { "Wool", new Vector2(0, 1) },
 			new object[] { "Wool", new Vector2(1, 1) },
 			new object[] { "Wool", new Vector2(2, 1) }
@@ -455,7 +503,6 @@ public static class CraftingRecipes
 			new object[] { "PlankOak", new Vector2(2, 2) }
 		}, new InventorySlot("Chest", 1)
 		},
-
 		new object[]{ "PlankSpruce", new object[] {
 			new object[] { "PlankSpruce", new Vector2(1, 0) },
 			new object[] { "PlankSpruce", new Vector2(2, 0) },
@@ -464,6 +511,16 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(0, 2) },
 			new object[] { "PlankSpruce", new Vector2(1, 2) },
 			new object[] { "PlankSpruce", new Vector2(2, 2) }
+		}, new InventorySlot("Chest", 1)
+		},
+		new object[]{ "PlankCherry", new object[] {
+			new object[] { "PlankCherry", new Vector2(1, 0) },
+			new object[] { "PlankCherry", new Vector2(2, 0) },
+			new object[] { "PlankCherry", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(2, 1) },
+			new object[] { "PlankCherry", new Vector2(0, 2) },
+			new object[] { "PlankCherry", new Vector2(1, 2) },
+			new object[] { "PlankCherry", new Vector2(2, 2) }
 		}, new InventorySlot("Chest", 1)
 		},
 
@@ -511,6 +568,13 @@ public static class CraftingRecipes
 			new object[] { "PlankSpruce", new Vector2(2, 0) },
 			new object[] { "PlankSpruce", new Vector2(0, 1) },
 			new object[] { "PlankSpruce", new Vector2(2, 1) },
+		}, new InventorySlot("Boat", 1)
+		},
+		new object[]{ "PlankCherry", new object[] {
+			new object[] { "PlankCherry", new Vector2(1, 0) },
+			new object[] { "PlankCherry", new Vector2(2, 0) },
+			new object[] { "PlankCherry", new Vector2(0, 1) },
+			new object[] { "PlankCherry", new Vector2(2, 1) },
 		}, new InventorySlot("Boat", 1)
 		},
 	};
