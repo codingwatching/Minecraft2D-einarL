@@ -24,6 +24,10 @@ public static class SpawnGrassScript
 		{19, 0.25f}, // Dandelion
 		{33, 0.15f}, // MushroomBrown
 		{34, 0.10f}, // MushroomRed
+		{71, 0.25f}, // TulipOrange
+		{72, 0.25f}, // TulipPink
+		{73, 0.25f}, // TulipRed
+		{74, 0.25f}, // TulipWhite
 	};
 
 	// maps blockID to how its spawn process (0 is finished) 
@@ -32,6 +36,10 @@ public static class SpawnGrassScript
 		{19, 0}, // Dandelion
 		{33, 0}, // MushroomBrown
 		{34, 0}, // MushroomRed
+		{71, 0}, // TulipOrange
+		{72, 0}, // TulipPink
+		{73, 0}, // TulipRed
+		{74, 0}, // TulipWhite
 	};
 
 	// spawns grass and flowers
@@ -70,31 +78,49 @@ public static class SpawnGrassScript
 	}
 
 	// spawns a thing from the thingsThatCanSpawn array, or nothing
-	public static float[] decideIfSpawnGrass(float xPos, float yPos, int[] thingsThatCanSpawn)
+	// spawnCluster is true if it should spawn many of the same flower in the same area
+	public static float[] decideIfSpawnGrass(float xPos, float yPos, int[] thingsThatCanSpawn, bool spawnCluster = true)
 	{
-		foreach (int blockID in  thingsThatCanSpawn)
+		if(spawnCluster)
 		{
-			if (!spawningProcess.ContainsKey(blockID)) continue;
-
-			if (spawningProcess[blockID] > 0) // if we are in the process of spawning a thing from the array
+			foreach (int blockID in thingsThatCanSpawn)
 			{
-				spawningProcess[blockID]--;
-				float rand = Random.value * 100;
-				if(rand < 30) {
-					return new float[]{ xPos, yPos, blockID }; // spawn the thing that we are in the process of spawning
-				}
-				else if (rand < 40)
+				if (!spawningProcess.ContainsKey(blockID)) continue;
+
+				if (spawningProcess[blockID] > 0) // if we are in the process of spawning a thing from the array
 				{
-					return new float[] { xPos, yPos, 17 }; // spawn grass
+					spawningProcess[blockID]--;
+					float rand = Random.value * 100;
+					if (rand < 30)
+					{
+						return new float[] { xPos, yPos, blockID }; // spawn the thing that we are in the process of spawning
+					}
+					else if (rand < 40)
+					{
+						return new float[] { xPos, yPos, 17 }; // spawn grass
+					}
+					return null;
 				}
-				return null;
 			}
+		}
+		else
+		{
+			float rand = Random.value * 100;
+			if (rand < 30)
+			{
+				return getRandomThingToSpawn(xPos, yPos, thingsThatCanSpawn, false);
+			}
+			else if (rand < 40)
+			{
+				return new float[] { xPos, yPos, 17 }; // spawn grass
+			}
+			return null;
 		}
 		return getRandomThingToSpawn(xPos, yPos, thingsThatCanSpawn);
 	}
 
 	// returns a random thing to spawn from the thingsThatCanSpawn array, or it might return null (nothing to spawn)
-	private static float[] getRandomThingToSpawn(float xPos, float yPos, int[] thingsThatCanSpawn)
+	private static float[] getRandomThingToSpawn(float xPos, float yPos, int[] thingsThatCanSpawn, bool cluster = true)
 	{
 		// Calculate the total weight
 		float totalWeight = 0;
@@ -114,7 +140,7 @@ public static class SpawnGrassScript
 			cumulativeWeight += spawnChances[blockID];
 			if (randomValue <= cumulativeWeight)
 			{
-				spawningProcess[blockID] = random.Next(flowerClusterSize[0], flowerClusterSize[1] + 1); // get random size for cluster
+				if(cluster) spawningProcess[blockID] = random.Next(flowerClusterSize[0], flowerClusterSize[1] + 1); // get random size for cluster
 				return new float[] { xPos, yPos, blockID };
 			}
 		}

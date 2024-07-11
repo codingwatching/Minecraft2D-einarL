@@ -17,7 +17,11 @@ public static class FrontBackgroundBlocks
 		{"Grass"},
 		{"MushroomBrown"},
 		{"MushroomRed"},
-		{"Ladder"}
+		{"Ladder"},
+		{"TulipOrange"},
+		{"TulipPink"},
+		{"TulipRed"},
+		{"TulipWhite"}
 	};
 
 	// wallblocks are blocks that have to have a wall behind them, like ladders
@@ -43,9 +47,14 @@ public static class FrontBackgroundBlocks
 	{
 		{"PlankOak"},
 		{"LogOak"},
+		{"LeavesOak"},
 		{"PlankSpruce"},
 		{"LogSpruce"},
-		{"Wool"}
+		{"LeavesSpruce"},
+		{"Wool"},
+		{"PlankCherry"},
+		{"LogCherry"},
+		{"LeavesCherry"},
 	};
 
 	private static HashSet<string> movable = new HashSet<string>()

@@ -174,6 +174,10 @@ public static class BlockHashtable
 			{ 68, getBlockWithName("LogCherry")},
 			{ 69, getBlockWithName("LeavesCherry")},
 			{ 70, getBlockWithName("SaplingCherry")},
+			{ 71, getBlockWithName("TulipOrange")},
+			{ 72, getBlockWithName("TulipPink")},
+			{ 73, getBlockWithName("TulipRed")},
+			{ 74, getBlockWithName("TulipWhite")},
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall

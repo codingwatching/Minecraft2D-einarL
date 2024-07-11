@@ -31,7 +31,7 @@ public class CherryGrove : Biome
 		float yPos = blockIndexToYPosition(blockIndex - 1);
 
 		frontBackgroundLayerBlocks = SpawnTreeScript.decideIfSpawnTree(blockIndexToYPosition(blockIndex - 1), chunkPos, xPos, "cherry"); // for spawning trees
-		float[] blockToAdd = SpawnGrassScript.decideIfSpawnGrass(xPos, yPos); // for spawning grass and flowers
+		float[] blockToAdd = SpawnGrassScript.decideIfSpawnGrass(xPos, yPos, new int[] {17,71,72,73,74}, false); // for spawning grass and flowers
 		if (blockToAdd != null) frontBackgroundLayerBlocks.Add(blockToAdd);
 
 		object[] animalToSpawn = SpawnAnimalScript.decideIfSpawnAnimal(xPos, yPos); // maybe spawn animal

@@ -391,7 +391,7 @@ public static class SpawnTreeScript
 		switch (process)
 		{
 			case 14:
-				height = random.Next(minHeight + 3, maxHeight + 1 + 3); // get random height for the tree
+				height = random.Next(minHeight + 5, maxHeight + 1 + 3); // get random height for the tree
 				if (goingRight)
 				{
 					treeHeightRight = height;
@@ -534,7 +534,7 @@ public static class SpawnTreeScript
 		switch (process)
 		{
 			case 11:
-				height = random.Next(minHeight + 3, maxHeight + 1 + 3); // get random height for the tree
+				height = random.Next(minHeight + 5, maxHeight + 1 + 3); // get random height for the tree
 				if (goingRight)
 				{
 					treeHeightRight = height;
