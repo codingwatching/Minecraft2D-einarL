@@ -20,6 +20,7 @@ public class LeafItemDrop : ItemDropBehaviour
 
 		if (leafType.Equals("Oak")) return oakDropItem();
 		if (leafType.Equals("Spruce")) return spruceDropItem();
+		if (leafType.Equals("Cherry")) return cherryDropItem();
 
 		Debug.LogError("Error! leafType is not a legal value. leafType: " + leafType);
 		return null;
@@ -52,6 +53,19 @@ public class LeafItemDrop : ItemDropBehaviour
 		{
 			GameObject itemToDrop = Resources.Load("Prefabs\\ItemContainer") as GameObject;
 			itemToDrop.transform.Find("Item").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures\\ItemTextures\\SaplingSpruce"); // change item texture
+			return new List<GameObject> { itemToDrop };
+		}
+		return null;
+	}
+
+	private List<GameObject> cherryDropItem()
+	{
+		float rand = Random.value * 100; // Generate a random value between 0 and 100
+
+		if (rand < saplingChance) // spawn sapling
+		{
+			GameObject itemToDrop = Resources.Load("Prefabs\\ItemContainer") as GameObject;
+			itemToDrop.transform.Find("Item").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Textures\\ItemTextures\\SaplingCherry"); // change item texture
 			return new List<GameObject> { itemToDrop };
 		}
 		return null;

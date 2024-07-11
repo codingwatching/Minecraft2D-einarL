@@ -53,13 +53,14 @@ public class PlaceFire : PlaceBlockBehaviour
 		List<Collider2D> results = new List<Collider2D>();
 
 		// Check for overlaps
-		Physics2D.OverlapCircle(blockPos, 0.0001f, filter, results);
+		Physics2D.OverlapCircle(blockPos, 0.45f, filter, results);
 
 		GameObject objToReturn = null;
 		foreach (Collider2D collider in results) // return the frontmost block
 		{
-			if (collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground")) return collider.gameObject;
-			if (collider.gameObject.layer == LayerMask.NameToLayer("Default")) objToReturn = collider.gameObject;
+			if (collider.gameObject.name == "TNT") return collider.gameObject;
+			if (collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground")) objToReturn = collider.gameObject;
+			if (collider.gameObject.layer == LayerMask.NameToLayer("Default") && (objToReturn == null || objToReturn.gameObject.layer == LayerMask.NameToLayer("BackBackground"))) objToReturn = collider.gameObject;
 			else if (objToReturn == null && collider.gameObject.layer == LayerMask.NameToLayer("BackBackground")) objToReturn = collider.gameObject;
 		}
 		if (objToReturn != null) return objToReturn;

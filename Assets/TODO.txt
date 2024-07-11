@@ -32,8 +32,7 @@ store chunks in region files, about 300 chunks or so in a region.
 
 breaking bed removes the spawnpoint
 
-make player not be able to breathe underwater
-make fire take damage to entities
-bones, lava, tnt, flint and steel, pink tree biome, water in caves
+
+bones, lava, pink tree biome, water in caves
 
 save data every 5 min

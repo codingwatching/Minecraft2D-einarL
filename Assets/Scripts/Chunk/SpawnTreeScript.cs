@@ -10,6 +10,7 @@ public static class SpawnTreeScript
 	private static Dictionary<string, int> treeSpawnChance = new Dictionary<string, int>() { // odds of a tree spawning
 		{"oak", 10 },
 		{"spruce",30},
+		{"cherry", 10},
 	};
 
 	// maps tree ID's to the function that generates the tree
@@ -18,6 +19,8 @@ public static class SpawnTreeScript
 		{0, spawnOakTreeType0},
 		{1, spawnSpruceTreeType0},
 		{2, spawnSpruceTreeType1},
+		{3, spawnCherryTreeType0},
+		{4, spawnCherryTreeType1},
 	};
 
 	// maps tree ID's to the center of its progress, this is to know when we need to figure out how low we place the logs on the tree
@@ -27,6 +30,8 @@ public static class SpawnTreeScript
 		{0, 3}, // normal oak tree
 		{1, 3}, // spruce looks like christmas tree
 		{2, 2}, // spruce thin tree
+		{3, 7}, // cherry tree type 0
+		{4, 5}, // cherry tree type 1
 	};
 
 	private static int minHeight = 4;
@@ -79,6 +84,7 @@ public static class SpawnTreeScript
 		{
 			if (tree.Equals("oak")) spawnOakTree(blockPosAndID, treeBottomYPos, goingRight, xPos);
 			else if (tree.Equals("spruce")) spawnSpruceTree(blockPosAndID, treeBottomYPos, goingRight, xPos);
+			else if (tree.Equals("cherry")) spawnCherryTree(blockPosAndID, treeBottomYPos, goingRight, xPos);
 			else Debug.LogError("Error! variable tree is not a valid tree type");
 
 			if (goingRight) treeProgressRight--;
@@ -336,7 +342,313 @@ public static class SpawnTreeScript
 		else Debug.LogError("Process given is not a valid number, should be 1-3, but is: " + process);
 	}
 
-	public static bool isSpawningTree(bool goingRight)
+	//---------------------------------------------------------------------------
+	//								CHERRY
+	//---------------------------------------------------------------------------
+
+	private static int[] cherryTreeTypeIDs = new int[] { 3, 4 };
+
+	/**
+	 * 
+	 * returns blockPosAndID List<int[]> of type: {{x, y, blockID}, {x, y, blockID}, ...} which is info about the position
+	 *		   of the blocks for the trees.
+	 */
+	private static void spawnCherryTree(List<float[]> blockPosAndID, float treeBottomYPos, bool goingRight, float xPos)
+	{
+		int cherryTypeIndex = goingRight ? 1 : 0;
+		if (spawningTreeTypeLeftAndRight[cherryTypeIndex] == -1) // if we are NOT in the process of spawning a cherry tree
+		{
+			spawningTreeTypeLeftAndRight[cherryTypeIndex] = cherryTreeTypeIDs[random.Next(cherryTreeTypeIDs.Length)]; // get random cherry tree ID to spawn
+
+			if (spawningTreeTypeLeftAndRight[cherryTypeIndex] == 3)
+			{
+				if (goingRight) treeProgressRight = 14;
+				else treeProgressLeft = 14;
+			}
+			else if (spawningTreeTypeLeftAndRight[cherryTypeIndex] == 4)
+			{
+				if (goingRight) treeProgressRight = 11;
+				else treeProgressLeft = 11;
+			}
+
+			if (goingRight) bottomPosRight = treeBottomYPos;
+			else bottomPosLeft = treeBottomYPos;
+		}
+
+		float bottomPos = goingRight ? bottomPosRight : bottomPosLeft;
+		// if the progress is at 7, i.e. where we spawn the logs, then we need to adjust the bottom position so that the logs will go down until they touch the ground
+		if ((goingRight && treeProgressRight == treeIDToMiddleProgress[spawningTreeTypeLeftAndRight[cherryTypeIndex]]) || (!goingRight && treeProgressLeft == treeIDToMiddleProgress[spawningTreeTypeLeftAndRight[cherryTypeIndex]])) bottomPos = treeBottomYPos;
+
+		treeIDToTreeSpawningFunction[spawningTreeTypeLeftAndRight[cherryTypeIndex]](blockPosAndID, bottomPos, goingRight, xPos);
+	}
+
+	// this tree looks similar to this: https://staticg.sportskeeda.com/editor/2023/05/2c388-16835234510962-1920.jpg
+	private static void spawnCherryTreeType0(List<float[]> blockPosAndID, float treeBottomYPos, bool goingRight, float xPos)
+	{
+		int process = goingRight ? treeProgressRight : treeProgressLeft;
+		int height = goingRight ? treeHeightRight : treeHeightLeft;
+
+		switch (process)
+		{
+			case 14:
+				height = random.Next(minHeight + 3, maxHeight + 1 + 3); // get random height for the tree
+				if (goingRight)
+				{
+					treeHeightRight = height;
+					bottomPosRight = treeBottomYPos;
+				}
+				else
+				{
+					treeHeightLeft = height;
+					bottomPosLeft = treeBottomYPos;
+				}
+
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 }); // 69 is id for cherry leaves, this is right/left-most leaves
+				break;
+			case 13:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 }); 
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 }); 
+				break;
+			case 12:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				break;
+			case 11:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				// spawn leaf and log:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 68 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				break;
+			case 10:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				// spawn leaf and log:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				break;
+			case 9:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				// logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 68 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 68 });
+				break;
+			case 8:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); 
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				// log:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 68 });
+				break;
+			case 7:
+				float originalBottomPos = goingRight ? bottomPosRight : bottomPosLeft;
+
+				float i;
+				for (i = treeBottomYPos; i < originalBottomPos + height - 2; i++)
+				{
+					if (i > originalBottomPos + height - 5) // spawn logs and leaves
+					{
+						blockPosAndID.Add(new float[] { xPos, i, 68 });
+						blockPosAndID.Add(new float[] { xPos, i, 69 });
+					}
+					else blockPosAndID.Add(new float[] { xPos, i, 68 }); // 6 represents the logs
+				}
+
+				blockPosAndID.Add(new float[] { xPos, i, 69 }); // then three blocks of leaves above
+				blockPosAndID.Add(new float[] { xPos, i + 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, i + 2, 69 });
+
+				break;
+			case 6:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				// log:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 7, 68 });
+				break;
+			case 5:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				// logs and leaves:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 68 });
+				// log:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 68 });
+				break;
+			case 4:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				// logs and leaves
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 68 });
+				break;
+			case 3:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 69 });
+				// logs and leaves
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 }); blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 68 });
+				break;
+			case 2:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				break;
+			case 1:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				break;
+			default:
+				Debug.LogError("Process given is not a valid number, should be 1-14, but is: " + process);
+				break;
+		}
+	}
+
+	// this tree looks similar to this: https://beebom.com/wp-content/uploads/2023/02/ghrown-Cherry-tree.jpg?w=640
+	private static void spawnCherryTreeType1(List<float[]> blockPosAndID, float treeBottomYPos, bool goingRight, float xPos)
+	{
+		int process = goingRight ? treeProgressRight : treeProgressLeft;
+		int height = goingRight ? treeHeightRight : treeHeightLeft;
+
+		switch (process)
+		{
+			case 11:
+				height = random.Next(minHeight + 3, maxHeight + 1 + 3); // get random height for the tree
+				if (goingRight)
+				{
+					treeHeightRight = height;
+					bottomPosRight = treeBottomYPos;
+				}
+				else
+				{
+					treeHeightLeft = height;
+					bottomPosLeft = treeBottomYPos;
+				}
+
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 }); // 69 is id for cherry leaves, this is right/left-most leaves
+				break;
+			case 10:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 69 });
+				break;
+			case 9:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 }); // log
+				break;
+			case 8:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				// spawn logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 68 });
+				break;
+			case 7:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 68 }); // log
+				break;
+			case 6:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 6, 69 });
+				// logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 7, 68 });
+				break;
+			case 5:
+				float originalBottomPos = goingRight ? bottomPosRight : bottomPosLeft;
+
+				float i;
+				for (i = treeBottomYPos; i < originalBottomPos + height - 2; i++)
+				{
+					if (i > originalBottomPos + height - 5) // spawn logs and leaves
+					{
+						blockPosAndID.Add(new float[] { xPos, i, 68 });
+						blockPosAndID.Add(new float[] { xPos, i, 69 });
+					}
+					else blockPosAndID.Add(new float[] { xPos, i, 68 }); // 6 represents the logs
+				}
+
+				blockPosAndID.Add(new float[] { xPos, i, 69 }); // then three blocks of leaves above
+				blockPosAndID.Add(new float[] { xPos, i + 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, i + 2, 69 });
+				break;
+			case 4:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				// logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 68 });
+				break;
+			case 3:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 1, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 5, 69 });
+				// logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				break;
+			case 2:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 2, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 });
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				// logs:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 68 });
+				break;
+			case 1:
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 3, 69 }); // upper leaf block
+				blockPosAndID.Add(new float[] { xPos, treeBottomYPos + height - 4, 69 });
+				break;
+			default:
+				Debug.LogError("Process given is not a valid number, should be 1-11, but is: " + process);
+				break;
+		}
+	}
+
+
+
+		public static bool isSpawningTree(bool goingRight)
 	{
 		if (goingRight) return treeProgressRight > 0;
 		return treeProgressLeft > 0;
