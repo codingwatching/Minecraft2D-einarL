@@ -87,7 +87,6 @@ public abstract class Entity : MonoBehaviour
 			else
 			{
 				isSwimming = true;
-				rb.AddForce(new Vector2(0, -7));
 			}
 		}
 		else // if entity is swimming

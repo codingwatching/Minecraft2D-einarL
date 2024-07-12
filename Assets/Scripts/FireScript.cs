@@ -65,10 +65,14 @@ public class FireScript : MonoBehaviour
 					GameObject block = getBlock(firePos);
 					if(block != null && FrontBackgroundBlocks.isBurnable(block.name))
 					{
-						GameObject fireInstance = Instantiate(BlockHashtable.getBlockByID(66), firePos, Quaternion.identity);
-						fireInstance.transform.parent = block.transform;
+						if (block.name.Equals("TNT")) block.GetComponent<TNTScript>().ignite();
+						else
+						{
+							GameObject fireInstance = Instantiate(BlockHashtable.getBlockByID(66), firePos, Quaternion.identity);
+							fireInstance.transform.parent = block.transform;
 
-						SpawningChunkData.addOrRemoveFireBlock(firePos.x, firePos.y, 0);
+							SpawningChunkData.addOrRemoveFireBlock(firePos.x, firePos.y, 0);
+						}
 					}
 				}
 			}
@@ -94,8 +98,9 @@ public class FireScript : MonoBehaviour
 		GameObject objToReturn = null;
 		foreach (Collider2D collider in results) // return the frontmost block
 		{
-			if (collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground")) return collider.gameObject;
-			if (collider.gameObject.layer == LayerMask.NameToLayer("Default")) objToReturn = collider.gameObject;
+			if (collider.gameObject.name.Equals("TNT")) return collider.gameObject;
+			if (collider.gameObject.layer == LayerMask.NameToLayer("FrontBackground")) objToReturn = collider.gameObject;
+			else if (collider.gameObject.layer == LayerMask.NameToLayer("Default") && (objToReturn == null || objToReturn.layer == LayerMask.NameToLayer("BackBackground"))) objToReturn = collider.gameObject;
 			else if (objToReturn == null && collider.gameObject.layer == LayerMask.NameToLayer("BackBackground")) objToReturn = collider.gameObject;
 		}
 		if (objToReturn != null) return objToReturn;

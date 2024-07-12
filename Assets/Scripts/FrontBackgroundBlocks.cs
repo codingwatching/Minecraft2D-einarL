@@ -55,6 +55,7 @@ public static class FrontBackgroundBlocks
 		{"PlankCherry"},
 		{"LogCherry"},
 		{"LeavesCherry"},
+		{"TNT"},
 	};
 
 	private static HashSet<string> movable = new HashSet<string>()

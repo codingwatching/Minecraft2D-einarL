@@ -46,6 +46,7 @@ public abstract class Animal : Entity
 	{
 		if (on)
 		{
+			speed = 1;
 			walkSpeed = 1;
 			runSpeed = 2;
 
@@ -54,6 +55,7 @@ public abstract class Animal : Entity
 		}
 		else
 		{
+			speed = 4;
 			walkSpeed = 4;
 			runSpeed = 6;
 
