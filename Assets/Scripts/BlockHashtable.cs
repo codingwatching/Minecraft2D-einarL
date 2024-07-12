@@ -217,6 +217,10 @@ public static class BlockHashtable
 			{"MushroomRed", 1},
 			{"Rose", 1},
 			{"Dandelion", 1},
+			{"TulipOrange", 1},
+			{"TulipPink", 1},
+			{"TulipRed", 1},
+			{"TulipWhite", 1},
 			{"TNT", 1},
 			{"Sand", 4}, // 4 is sand
 			{"Cactus", 5}, // 5 is cloth

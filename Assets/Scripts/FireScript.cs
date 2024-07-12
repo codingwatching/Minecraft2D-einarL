@@ -34,6 +34,7 @@ public class FireScript : MonoBehaviour
 		if (burnParent)
 		{
 			transform.parent.GetComponent<BlockScript>().checkSurroundingBlocks();
+			if (transform.parent.name.StartsWith("LeavesCherry")) transform.parent.GetComponent<CherryLeafScript>().runBeforeDestroyed();
 			SpawningChunkData.updateChunkData(transform.parent.position.x, transform.parent.position.y, 0, LayerMask.LayerToName(transform.parent.gameObject.layer));
 			Destroy(transform.parent.gameObject);
 		}

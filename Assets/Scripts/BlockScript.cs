@@ -137,7 +137,7 @@ public class BlockScript : MonoBehaviour, Interactable
 			breakBlockAudioSource.clip = breakBehaviour.getBreakSound();
 			breakBlockAudioSource.Play();
 		}
-
+		if(gameObject.name.StartsWith("LeavesCherry")) GetComponent<CherryLeafScript>().runBeforeDestroyed();
 		Destroy(gameObject);
 
 		
