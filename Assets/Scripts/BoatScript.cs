@@ -11,7 +11,8 @@ public class BoatScript : MonoBehaviour, Interactable
     private Transform steve;
     private bool isPlayerAttatched = false;
     private Vector3 previousPosition;
-    private float speed = 3000f;
+    private float speed = 60f;
+    private float maxSpeed = 10f;
     private MessageScript messageScript;
 
     // Start is called before the first frame update
@@ -28,18 +29,21 @@ public class BoatScript : MonoBehaviour, Interactable
     {
         if (!isFloating) checkIfFloating();
         else checkIfStoppedFloating();
-
-        if (isPlayerAttatched)
-        {
-            movePlayerWithBoat();
-            boatControls();
-        }
     }
+
+    void FixedUpdate()
+    {
+		if (isPlayerAttatched)
+		{
+			movePlayerWithBoat();
+			boatControls();
+		}
+	}
 
     private void boatControls()
     {
-        if (Input.GetKey(KeyCode.D)) rb.AddForce(Vector2.right * speed * Time.deltaTime);
-		if (Input.GetKey(KeyCode.A)) rb.AddForce(Vector2.left * speed * Time.deltaTime);
+        if (Input.GetKey(KeyCode.D) && rb.velocity.magnitude < maxSpeed) rb.AddForce(Vector2.right * speed);
+		if (Input.GetKey(KeyCode.A) && rb.velocity.magnitude < maxSpeed) rb.AddForce(Vector2.left * speed);
 
         if(Input.GetKey(KeyCode.LeftControl)) detachPlayer();
 	}
@@ -88,7 +92,7 @@ public class BoatScript : MonoBehaviour, Interactable
 		if (steve == null) steve = GameObject.Find("SteveContainer").transform;
 		steve.parent = transform;
 
-		steve.GetComponent<PlayerControllerScript>().isInBoat = true;
+		steve.GetComponent<PlayerControllerScript>().boatThatThePlayerIsIn = this;
 
 		Rigidbody2D rb = steve.GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
@@ -106,13 +110,13 @@ public class BoatScript : MonoBehaviour, Interactable
 		}
 	}
     // removes the player child so that the player no longer moves with the boat
-    private void detachPlayer()
+    public void detachPlayer()
     {
 		isPlayerAttatched = false;
 		if (steve == null) steve = transform.Find("SteveContainer").transform;
         steve.parent = null;
 
-		steve.GetComponent<PlayerControllerScript>().isInBoat = false;
+		steve.GetComponent<PlayerControllerScript>().boatThatThePlayerIsIn = null;
 		Rigidbody2D steveRB = steve.GetComponent<Rigidbody2D>();
 		steveRB.constraints = RigidbodyConstraints2D.FreezeRotation;
 		Physics2D.IgnoreCollision(GetComponent<Collider2D>(), steve.GetComponent<Collider2D>(), false);
@@ -124,7 +128,7 @@ public class BoatScript : MonoBehaviour, Interactable
     private void movePlayerWithBoat()
     {
 		Vector3 offset = previousPosition - transform.position;
-		steve.transform.position = new Vector2(steve.transform.position.x - offset.x, steve.transform.position.y);
+		steve.transform.position = new Vector2(steve.transform.position.x - offset.x, steve.transform.position.y - offset.y);
 
 		previousPosition = transform.position;
 	}
@@ -156,7 +160,10 @@ public class BoatScript : MonoBehaviour, Interactable
 
     private void checkIfStoppedFloating()
     {
-        if (!Physics2D.OverlapCircle(transform.position, 0.01f, LayerMask.GetMask("Water")))
+		bool bottomCheck = Physics2D.OverlapCircle(transform.position, 0.01f, LayerMask.GetMask("Water"));
+		bool topCheck = Physics2D.OverlapCircle(new Vector2(transform.position.x, transform.position.y + 0.1f), 0.01f, LayerMask.GetMask("Water"));
+
+		if (bottomCheck && topCheck || !bottomCheck && !topCheck || !bottomCheck && topCheck)
         {
             isFloating = false;
 			rb.constraints = RigidbodyConstraints2D.FreezeRotation;

@@ -41,7 +41,7 @@ public class PlayerControllerScript : MonoBehaviour
     public bool isSwimming { get; private set; } = false;
 	private float animationRunningSpeed = 1.5f;
     private string blockBelowPlayer; // the block name that the player is standing on
-    public bool isInBoat = false;
+    public BoatScript boatThatThePlayerIsIn = null;
     private bool isUnderwater = false;
 
     private bool didFall = false; // used to know when the player hits the ground after falling
@@ -105,7 +105,7 @@ public class PlayerControllerScript : MonoBehaviour
     {
 		if (InventoryScript.getIsInUI() || anim.GetBool("isSleeping")) return; // if user is in the UI or if steve is sleeping, then we cant move
 		lookTowardsMouse();
-        if (isInBoat) return;
+        if (boatThatThePlayerIsIn != null) return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal"); // -1: left, 0: still, 1: right
 
@@ -212,6 +212,7 @@ public class PlayerControllerScript : MonoBehaviour
     // checks if the players head is underwater
     private bool checkIfUnderWater()
     {
+        if (boatThatThePlayerIsIn != null) return false;
 		Collider2D[] results = new Collider2D[1];
 
 		ContactFilter2D contactFilter = new ContactFilter2D();
@@ -532,6 +533,7 @@ public class PlayerControllerScript : MonoBehaviour
 
 	public void die()
     {
+        if(boatThatThePlayerIsIn != null) boatThatThePlayerIsIn.detachPlayer();
         anim.SetBool("isDead", true);
         transform.Find("Steve").Find("Fire").gameObject.SetActive(false);
     }

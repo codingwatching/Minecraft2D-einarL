@@ -12,6 +12,7 @@ public class WaterScript : MonoBehaviour
     public bool isFlowing { get; private set; } = false; // is the water stillwater or is it flowing
     private Animator anim;
     private spawnChunkScript scScript;
+    private BoxCollider2D col;
     private int checkedWaterState = 0; // the state on the water block that we previously found by calling getBlockAtPosition()
     private float flowSpeed = 0.4f;
 
@@ -19,6 +20,7 @@ public class WaterScript : MonoBehaviour
 	{
 		anim = transform.Find("Image").GetComponent<Animator>();
         scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
+        col = GetComponent<BoxCollider2D>();
 	}
 
 	// Start is called before the first frame update
@@ -60,6 +62,7 @@ public class WaterScript : MonoBehaviour
 
         GameObject image = newStateInstance.transform.Find("Image").gameObject;
         GameObject spriteMask = newStateInstance.transform.Find("Sprite Mask").gameObject;
+		BoxCollider2D newInstanceCollider = newStateInstance.GetComponent<BoxCollider2D>();
 
         Destroy(transform.Find("Image").gameObject);
         Destroy(transform.Find("Sprite Mask").gameObject);
@@ -68,6 +71,8 @@ public class WaterScript : MonoBehaviour
 		image.transform.SetParent(this.transform, false);
 		spriteMask.transform.SetParent(this.transform, false);
 		anim = transform.Find("Image").GetComponent<Animator>();
+
+        col.offset = newInstanceCollider.offset; col.size = newInstanceCollider.size;
 
 		waterState = newState;
 

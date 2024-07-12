@@ -839,7 +839,7 @@ public class spawnChunkScript : MonoBehaviour
                 }
 			}
 		}
-        else // if its nighttime, then we want to spawn in mobs
+        else if(!chunkData.getBiome().Equals("Ocean")) // if its nighttime, then we want to spawn in mobs
         {
 			int amountOfMobsInChunk = 0;
 			foreach (object[] entity in chunkEntities)
