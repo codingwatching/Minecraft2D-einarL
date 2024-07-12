@@ -101,6 +101,14 @@ public static class BlockHashtable
 			{ 68, getBlockTileWithName("LogCherry")},
 			{ 69, getBlockTileWithName("LeavesCherry")},
 			{ 75, getBlockTileWithName("PlankCherry")},
+			{ 76, getBlockTileWithName("DoorCherryTopRight")},
+			{ 77, getBlockTileWithName("DoorCherryBottomRight")},
+			{ 78, getBlockTileWithName("DoorCherryTopSideRight")},
+			{ 79, getBlockTileWithName("DoorCherryBottomSideRight")},
+			{ 80, getBlockTileWithName("DoorCherryTopLeft")},
+			{ 81, getBlockTileWithName("DoorCherryBottomLeft")},
+			{ 82, getBlockTileWithName("DoorCherryTopSideLeft")},
+			{ 83, getBlockTileWithName("DoorCherryBottomSideLeft")},
 		};
 		// id's in blockTiles and blocks hashtable need to be the same for each block
 		blocks = new Hashtable()
@@ -180,6 +188,14 @@ public static class BlockHashtable
 			{ 73, getBlockWithName("TulipRed")},
 			{ 74, getBlockWithName("TulipWhite")},
 			{ 75, getBlockWithName("PlankCherry")},
+			{ 76, getBlockWithName("DoorCherryTopRight")},
+			{ 77, getBlockWithName("DoorCherryBottomRight")},
+			{ 78, getBlockWithName("DoorCherryTopSideRight")},
+			{ 79, getBlockWithName("DoorCherryBottomSideRight")},
+			{ 80, getBlockWithName("DoorCherryTopLeft")},
+			{ 81, getBlockWithName("DoorCherryBottomLeft")},
+			{ 82, getBlockWithName("DoorCherryTopSideLeft")},
+			{ 83, getBlockWithName("DoorCherryBottomSideLeft")},
 		};
 
 		// contains behaviours for blocks that need special functionality upon placing the block, e.g. torches need to be rotated to be placed on right/left wall
@@ -190,6 +206,7 @@ public static class BlockHashtable
 			{"BedUpperLeft", new PlaceBed()},
 			{"DoorOakTopRight", new PlaceDoor()},
 			{"DoorSpruceTopRight", new PlaceDoor()},
+			{"DoorCherryTopRight", new PlaceDoor()},
 			{"Fire", new PlaceFire()}, // for flint and steel
 		};
 
@@ -205,6 +222,7 @@ public static class BlockHashtable
 			{"CraftingTable", 0},
 			{"DoorOakTopRight", 0},
 			{"DoorSpruceTopRight", 0},
+			{"DoorCherryTopRight", 0},
 			{"Ladder", 0},
 			{"Torch", 0},
 			{"Chest", 0},

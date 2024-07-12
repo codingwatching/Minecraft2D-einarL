@@ -32,6 +32,6 @@ breaking bed removes the spawnpoint
 
 
 
-bones, lava, water in caves
+bones, lava, water in caves, unfreeze player when world has loaded
 
 save data every 5 min
