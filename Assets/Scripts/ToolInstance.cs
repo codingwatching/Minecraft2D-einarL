@@ -20,6 +20,8 @@ public class ToolInstance : DurabilityItem
 	public string toolType;
 	public string toolMaterial;
 
+	private PlayerControllerScript playerControllerScript;
+
 	public ToolInstance() { }
 
 	public ToolInstance(Tool tool)
@@ -73,6 +75,7 @@ public class ToolInstance : DurabilityItem
 	 */
 	public void reduceDurability()
 	{
+		if (InventoryScript.getPlayerControllerScript().isInCreativeMode()) return;
 		durability--;
 
 		if (durability <= 0) InventoryScript.breakToolBeingHeld();

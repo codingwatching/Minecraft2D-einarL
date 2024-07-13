@@ -82,15 +82,15 @@ public class Spider : Mob
 
 	private bool canJumpTowardsPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
-		float playerDistanceY = Mathf.Abs(playerPos.position.y - transform.position.y);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
+		float playerDistanceY = Mathf.Abs(playerTransform.position.y - transform.position.y);
 		return playerDistanceX <= canJumpToPlayerWithin && playerDistanceY <= 1.5f && !anim.GetBool("isDead");
 	}
 
 	protected override void huntPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
-		float playerDistanceY = Mathf.Abs(playerPos.position.y - transform.position.y);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
+		float playerDistanceY = Mathf.Abs(playerTransform.position.y - transform.position.y);
 		if (canJumpTowardsPlayer() && isDamageCoroutineRunning == false)
 		{
 			StartCoroutine(damagePlayer());
@@ -104,7 +104,7 @@ public class Spider : Mob
 		}
 		// if we reach this point then we want to move to the player
 		facePlayer(); // turn towards player
-		bool isPlayerOnRightSide = playerPos.position.x > transform.position.x;
+		bool isPlayerOnRightSide = playerTransform.position.x > transform.position.x;
 		if (isPlayerOnRightSide) makeDirectionRight(); // make the direction variable be to the right
 		else makeDirectionLeft();
 

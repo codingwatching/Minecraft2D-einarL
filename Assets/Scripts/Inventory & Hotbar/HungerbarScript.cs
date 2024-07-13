@@ -18,7 +18,7 @@ public class HungerbarScript : MonoBehaviour
     private float hungerLossWhenRunning = .25f;
 
     private int lastUpdatedHunger = 20; // used to check if we need to update hunger, if the current hunger is +/- 1 away from this value, then we need to update 
-	private bool isTakingHungerDamage = false; // TODO: need to save this to json file also
+	private bool isTakingHungerDamage = false;
 	private IEnumerator hungerDamageCoroutine = null;
 
 	private static IDataService dataService = JsonDataService.Instance;
@@ -67,6 +67,7 @@ public class HungerbarScript : MonoBehaviour
 		while (true)
 		{
 			yield return new WaitForSeconds(10f); // decreases hunger every 10 seconds
+			if (playerControllerScript.isInCreativeMode()) continue;
 			bool isRunning = playerControllerScript.getIsRunning();
 
 			if (isRunning) hunger = Mathf.Max(0, hunger - hungerLossWhenRunning);

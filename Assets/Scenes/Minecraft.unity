@@ -26776,6 +26776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1010529215}
   - component: {fileID: 1010529216}
+  - component: {fileID: 1010529217}
   m_Layer: 5
   m_Name: Hungerbar
   m_TagString: Untagged
@@ -26824,6 +26825,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54f53721901e8140bf779b3c577d3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1010529217
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010529214}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &1012673934
 GameObject:
   m_ObjectHideFlags: 0
@@ -50386,6 +50399,7 @@ GameObject:
   - component: {fileID: 2017929770}
   - component: {fileID: 2017929771}
   - component: {fileID: 2017929772}
+  - component: {fileID: 2017929773}
   m_Layer: 5
   m_Name: Healthbar
   m_TagString: Untagged
@@ -50530,6 +50544,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!225 &2017929773
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017929769}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2020977946
 GameObject:
   m_ObjectHideFlags: 0
@@ -52600,6 +52626,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2110816436}
   - component: {fileID: 2110816437}
+  - component: {fileID: 2110816438}
   m_Layer: 5
   m_Name: Armorbar
   m_TagString: Untagged
@@ -52648,6 +52675,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4050475f815b9b48adb13a53d78e631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &2110816438
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110816435}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2113994417
 GameObject:
   m_ObjectHideFlags: 0

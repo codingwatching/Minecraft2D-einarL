@@ -440,4 +440,9 @@ public static class InventoryScript
 	{
 		return inventory;
 	}
+
+	public static PlayerControllerScript getPlayerControllerScript()
+	{
+		return playerControllerScript;
+	}
 }

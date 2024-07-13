@@ -54,6 +54,9 @@ public class PlayerControllerScript : MonoBehaviour
 
 	private bool isRunning = false;
 
+    private bool creativeMode = false;
+    private bool isFlying = false;
+
     private float horizontalMove = 0;
     // Start is called before the first frame update
     void Start()
@@ -595,6 +598,17 @@ public class PlayerControllerScript : MonoBehaviour
         return isRunning;
     }
 
+    public void toggleCreativeMode(bool creative = true)
+    {
+        creativeMode = creative;
+        healthbarScript.GetComponent<CanvasGroup>().alpha = creative ? 0 : 1;
+		hungerbarScript.GetComponent<CanvasGroup>().alpha = creative ? 0 : 1;
+	}
+
+    public bool isInCreativeMode()
+    {
+        return creativeMode;
+    }
 
     public enum LadderType
     {

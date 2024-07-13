@@ -38,7 +38,7 @@ public abstract class Entity : MonoBehaviour
 		anim = GetComponent<Animator>();
 		col = GetComponent<CapsuleCollider2D>();
 		sayAudioSource = GetComponent<AudioSource>();
-		playerTransform = GameObject.Find("SteveContainer").transform;
+		playerTransform = InventoryScript.getPlayerControllerScript().transform;
 
 		walkingCoroutine = StartCoroutine(decideIfWalk());
 		//StartCoroutine(makeStepSound());

@@ -17,7 +17,7 @@ public class Creeper : Mob
 
 	protected override void huntPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
 		if (canHurtPlayer())
 		{
 			if (isDamageCoroutineRunning == false) StartCoroutine(damagePlayer());
@@ -28,7 +28,7 @@ public class Creeper : Mob
 		if (isDamageCoroutineRunning) return;
 		// if we reach this point then we want to move to the player
 		facePlayer(); // turn towards player
-		bool isPlayerOnRightSide = playerPos.position.x > transform.position.x;
+		bool isPlayerOnRightSide = playerTransform.position.x > transform.position.x;
 		if (isPlayerOnRightSide) makeDirectionRight(); // make the direction variable be to the right
 		else makeDirectionLeft();
 
@@ -47,8 +47,8 @@ public class Creeper : Mob
 
 	protected override bool canHurtPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
-		float playerDistanceY = Mathf.Abs(playerPos.position.y - transform.position.y);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
+		float playerDistanceY = Mathf.Abs(playerTransform.position.y - transform.position.y);
 		return playerDistanceX <= canHurtPlayerWithin && playerDistanceY <= 3f && !anim.GetBool("isDead");
 	}
 
@@ -60,7 +60,7 @@ public class Creeper : Mob
 		anim.SetBool("isBlowingUp", true);
 		while (true)
 		{
-			float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
+			float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
 			if (playerDistanceX > 3f && blowUpCounter < 2) break;
 			if(blowUpCounter >= 2)
 			{

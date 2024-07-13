@@ -60,7 +60,7 @@ public class Skeleton : Mob
 
 		// if we reach this point then we want to move to the player
 		facePlayer(); // turn towards player
-		bool isPlayerOnRightSide = playerPos.position.x > transform.position.x;
+		bool isPlayerOnRightSide = playerTransform.position.x > transform.position.x;
 		if (isPlayerOnRightSide) makeDirectionRight(); // make the direction variable be to the right
 		else makeDirectionLeft();
 
@@ -79,7 +79,7 @@ public class Skeleton : Mob
 
 	private void pointBowTowardsPlayer()
 	{
-		Vector3 target = playerPos.position;
+		Vector3 target = playerTransform.position;
 
 		bool facingRight = target.x > transform.position.x;
 		Transform arm = facingRight ? frontArm : backArm;
@@ -139,7 +139,7 @@ public class Skeleton : Mob
 	private void shootArrow()
 	{
 		// Calculate the required angle
-		Vector2 direction = playerPos.position - transform.position;
+		Vector2 direction = playerTransform.position - transform.position;
 		float angle = calculateShootingAngle(direction, arrowForce);
 
 		// Instantiate the arrow at the skeleton's position
@@ -156,7 +156,7 @@ public class Skeleton : Mob
 	// checks if arrows can reach player
 	protected override bool canHurtPlayer()
 	{
-		return (raycast(transform.position, playerPos.position) || raycast(new Vector2(transform.position.x, transform.position.y + 0.4f), new Vector2(playerPos.position.x, playerPos.position.y + 0.4f))) && !anim.GetBool("isDead");
+		return (raycast(transform.position, playerTransform.position) || raycast(new Vector2(transform.position.x, transform.position.y + 0.4f), new Vector2(playerTransform.position.x, playerTransform.position.y + 0.4f))) && !anim.GetBool("isDead");
 	}
 
 	protected override IEnumerator damagePlayer()
@@ -237,7 +237,7 @@ public class Skeleton : Mob
 		Rigidbody2D headRB = head.AddComponent<Rigidbody2D>();
 		head.AddComponent<BoxCollider2D>();
 		float randomHeadKnockback = Random.Range(0f, 10f);
-		bool takeKnockbackLeft = playerPos.position.x > transform.position.x;
+		bool takeKnockbackLeft = playerTransform.position.x > transform.position.x;
 		if (takeKnockbackLeft) headRB.velocity = new Vector2(-randomHeadKnockback, Random.Range(2f, 8f)); // if player is on the right side
 		else headRB.velocity = new Vector2(randomHeadKnockback, Random.Range(2f, 8f));
 		headRB.angularVelocity = Random.Range(100, 1001);

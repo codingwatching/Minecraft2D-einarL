@@ -69,6 +69,8 @@ public class HealthbarScript : MonoBehaviour
 
 	public void takeDamage(int damage, float enemyXPos, bool knockBack = true, bool armorProtectsPlayer = true)
     {
+        if (playerControllerScript.isInCreativeMode()) return;
+
         if (armorProtectsPlayer) health -= armorScript.getReducedDamage(damage);
 		else health -= damage;
 
@@ -109,6 +111,8 @@ public class HealthbarScript : MonoBehaviour
 
     private void die()
     {
+        if (playerControllerScript.isInCreativeMode()) return;
+
 		playerControllerScript.die(); // so that the death animation occurs
 		canvasScript.showDeathScreen();
 		StopAllCoroutines(); // stop healing and other stuff
@@ -161,7 +165,7 @@ public class HealthbarScript : MonoBehaviour
     {
         while (isTakingHungerDamage)
         {
-            if (health > 1) takeDamage(1, 0, false, false);
+            if (health > 1 && !playerControllerScript.isInCreativeMode()) takeDamage(1, 0, false, false);
             yield return new WaitForSeconds(2);
         }
     }
@@ -177,9 +181,9 @@ public class HealthbarScript : MonoBehaviour
 		}
     }
 
-    private void heal(int healAddition)
+    private void heal(int healthAddition)
     {
-        health = Mathf.Min(20, health + healAddition);
+        health = Mathf.Min(20, health + healthAddition);
         updateHeartImages();
         StartCoroutine(flashAnimationHealing());
     }
@@ -203,8 +207,8 @@ public class HealthbarScript : MonoBehaviour
     }
 
 	/**
- * displays a red tint on the entity if red remains true, otherwise returns the entity color back to normal
- */
+     * displays a red tint on the entity if red remains true, otherwise returns the entity color back to normal
+     */
 	private void displayTint(bool red = true)
 	{
 		SpriteRenderer[] spriteRenderers = steve.GetComponentsInChildren<SpriteRenderer>();

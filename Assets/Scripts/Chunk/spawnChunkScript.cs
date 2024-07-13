@@ -40,8 +40,7 @@ public class spawnChunkScript : MonoBehaviour
 	public Biome nextSpawnChunkStrategy { get; private set; } // the next biome that should be rendered
 	public Biome previousSpawnChunkStrategy { get; private set; } // the previous biome that was rendered
 
-	//private List<Biome> biomes = new List<Biome> { new Plains(), new Desert(), new Tundra(), new CherryGrove() }; // Ocean biome gets added later so that the player wont spawn in it
-	private List<Biome> biomes = new List<Biome> { new Plains(), new CherryGrove() };
+	private List<Biome> biomes = new List<Biome> { new Plains(), new Desert(), new Tundra(), new CherryGrove() }; // Ocean biome gets added later so that the player wont spawn in it
 	// how long the biome is (in chunks), this counts down every time a new chunk is rendered and when
 	// it hits 0, then a new random chunk gets generated
 	public int biomeLength { get; private set; }

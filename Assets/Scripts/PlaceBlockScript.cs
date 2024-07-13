@@ -35,6 +35,7 @@ public class PlaceBlockScript : MonoBehaviour
     private float placingRange = 6f;
     private Transform head; // steve's head
     private Transform torso;
+    private PlayerControllerScript playerControllerScript;
 
 	void Awake()
 	{
@@ -51,6 +52,7 @@ public class PlaceBlockScript : MonoBehaviour
         anim = GetComponent<Animator>();
         backgroundVisualTiles = GameObject.Find("Grid").transform.Find("BackgroundVisualTiles").GetComponent<Tilemap>();
         placeBlockAudioSource = GameObject.Find("Audio").transform.Find("BreakBlockSound").GetComponent<AudioSource>();
+		playerControllerScript = transform.parent.GetComponent<PlayerControllerScript>();
 	}
 
     // Update is called once per frame
@@ -241,7 +243,7 @@ public class PlaceBlockScript : MonoBehaviour
 
 		}
 		else placedBlocks = new List<GameObject>() { Instantiate(holdingItem, hoveringOverPosition, Quaternion.identity) }; // place block
-		if(!holdingItemName.Equals("Fire")) InventoryScript.decrementSlot(InventoryScript.getSelectedSlot()); // remove the block from the inventory
+		if(!holdingItemName.Equals("Fire") && !playerControllerScript.isInCreativeMode()) InventoryScript.decrementSlot(InventoryScript.getSelectedSlot()); // remove the block from the inventory
 
         if (placedBlocks.Count > 0 && placedBlocks[0].name.StartsWith("Water"))
         {

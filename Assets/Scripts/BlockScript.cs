@@ -21,6 +21,7 @@ public class BlockScript : MonoBehaviour, Interactable
 	private spawnChunkScript scScript;
 
 	private OpenFurnaceScript openFurnaceScript;
+	private PlayerControllerScript playerControllerScript;
 
 
 	void Awake()
@@ -34,6 +35,7 @@ public class BlockScript : MonoBehaviour, Interactable
 		// initialize break behaviour
 		breakBehaviour = BlockBehaviourData.getBreakBehaviour(gameObject.name);
 		openFurnaceScript = GameObject.Find("Canvas").transform.Find("InventoryParent").GetComponent<OpenFurnaceScript>();
+		playerControllerScript = InventoryScript.getPlayerControllerScript();
 	}
 	// Start is called before the first frame update
 	void Start()
@@ -94,7 +96,11 @@ public class BlockScript : MonoBehaviour, Interactable
      * Tool heldTool: the tool that the player is using to mine this block
      */
 	public void mineBlock(ToolInstance heldTool)
-    {
+	{
+		if (playerControllerScript.isInCreativeMode()) { 
+			breakBlock();
+			return;
+		}
 
         isMining = true;
 		toolBreakingWith = heldTool;
@@ -127,6 +133,7 @@ public class BlockScript : MonoBehaviour, Interactable
 	 */
 	public void breakBlock(bool makeSound = true)
 	{
+		if (gameObject.name.Equals("Bedrock")) return;
 		dropItems();
 
 		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, 0, LayerMask.LayerToName(gameObject.layer));

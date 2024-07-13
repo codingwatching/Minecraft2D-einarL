@@ -15,8 +15,8 @@ public abstract class Mob : Entity
 	protected int damage = 6; // how much the mob damages the player when it hits him, 1 heart is 2 hp
 	protected bool isDamageCoroutineRunning = false;
 
-	protected Transform playerPos;
 	protected HealthbarScript healthbarScript; // script for the health of the player
+	protected PlayerControllerScript playerControllerScript;
 
 	// Start is called before the first frame update
 	protected void Start()
@@ -24,7 +24,7 @@ public abstract class Mob : Entity
 		initializeEntity();
 		initializeAudio();
 		StartCoroutine(decideIfMakeNoise());
-		playerPos = GameObject.Find("SteveContainer").transform;
+		playerControllerScript = playerTransform.GetComponent<PlayerControllerScript>();
 		healthbarScript = GameObject.Find("Canvas").transform.Find("Healthbar").GetComponent<HealthbarScript>();
 		StartCoroutine(checkIfHuntPlayer());
 		health = 20;
@@ -44,6 +44,7 @@ public abstract class Mob : Entity
 		while (true)
 		{
 			yield return new WaitForSeconds(2f); // check if player is in range every x seconds
+			if (playerControllerScript.isInCreativeMode()) continue;
 			if (isPlayerInRange() && !isHunting) startHunting(); // if the mob isnt hunting, then check if it should start hunting
 			else if (isHunting && !isPlayerInRange()) stopHunting(); // if the mob is hunting, then check if it should stop
 		}
@@ -51,6 +52,7 @@ public abstract class Mob : Entity
 
 	protected void startHunting()
 	{
+
 		isHunting = true;
 		StopCoroutine(walkingCoroutine); // stop roaming
 		isWalking = false;
@@ -67,22 +69,22 @@ public abstract class Mob : Entity
 	 */
 	protected virtual bool isPlayerInRange()
 	{
-		float distance = Vector2.Distance(playerPos.position, transform.position);
+		float distance = Vector2.Distance(playerTransform.position, transform.position);
 
 		// if the player is within range of the mob && the difference in the y axis is <= huntPlayerWithinYAxis
-		return distance <= huntPlayerWithinRange && Mathf.Abs(playerPos.position.y - transform.position.y) <= huntPlayerWithinYAxis;
+		return distance <= huntPlayerWithinRange && Mathf.Abs(playerTransform.position.y - transform.position.y) <= huntPlayerWithinYAxis;
 	}
 
 	protected virtual bool canHurtPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
-		float playerDistanceY = Mathf.Abs(playerPos.position.y - transform.position.y);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
+		float playerDistanceY = Mathf.Abs(playerTransform.position.y - transform.position.y);
 		return playerDistanceX <= canHurtPlayerWithin && playerDistanceY <= 1.5f && !anim.GetBool("isDead");
 	}
 
 	protected virtual void huntPlayer()
 	{
-		float playerDistanceX = Mathf.Abs(playerPos.position.x - transform.position.x);
+		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
 		if (canHurtPlayer() && isDamageCoroutineRunning == false)
 		{
 			StartCoroutine(damagePlayer());
@@ -96,7 +98,7 @@ public abstract class Mob : Entity
 		}
 		// if we reach this point then we want to move to the player
 		facePlayer(); // turn towards player
-		bool isPlayerOnRightSide = playerPos.position.x > transform.position.x;
+		bool isPlayerOnRightSide = playerTransform.position.x > transform.position.x;
 		if (isPlayerOnRightSide) makeDirectionRight(); // make the direction variable be to the right
 		else makeDirectionLeft();
 
@@ -115,7 +117,7 @@ public abstract class Mob : Entity
 
 	protected void facePlayer()
 	{
-		bool isPlayerOnRightSide = playerPos.position.x > transform.position.x;
+		bool isPlayerOnRightSide = playerTransform.position.x > transform.position.x;
 		if (isPlayerOnRightSide && !isFacingRight()) turnRight();
 		else if (!isPlayerOnRightSide && isFacingRight()) turnLeft();
 	}
