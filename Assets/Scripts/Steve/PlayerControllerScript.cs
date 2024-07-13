@@ -570,6 +570,11 @@ public class PlayerControllerScript : MonoBehaviour
 		anim.SetBool("isDead", false);
 	}
 
+    public void removeAnimations()
+    {
+		anim.SetBool("isWalking", false);
+	}
+
 	private bool goingRight()
     {
         return horizontalMove > 0;

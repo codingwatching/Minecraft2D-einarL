@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
+using TMPro;
 using UnityEngine;
 
 public class CanvasScript : MonoBehaviour
@@ -7,15 +9,21 @@ public class CanvasScript : MonoBehaviour
     GameObject deathScreen;
     PlayerControllerScript playerController;
     GameObject gameMenuScreen;
+    GameObject chat;
+    GameObject chatMessage;
+    TMP_Text chatMessageText;
     bool isPaused = false;
+    bool isInChat = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        deathScreen = gameObject.transform.Find("DeathScreen").gameObject;
+        deathScreen = transform.Find("DeathScreen").gameObject;
 		playerController = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
-        gameMenuScreen = gameObject.transform.Find("GameMenu").gameObject;
-
+        gameMenuScreen = transform.Find("GameMenu").gameObject;
+        chat = transform.Find("Chat").gameObject;
+        chatMessage = transform.Find("ChatMessage").gameObject;
+		chatMessageText = chatMessage.transform.Find("Text").GetComponent<TMP_Text>();
 	}
 
     // Update is called once per frame
@@ -23,10 +31,10 @@ public class CanvasScript : MonoBehaviour
     {
 		if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if(isInChat) closeChat();
+            else if (isPaused)
             {
 				closeMenuAndResumeGame();
-
 			}
 			else if (playerController.isSleeping()) // stop sleeping
 			{
@@ -37,6 +45,13 @@ public class CanvasScript : MonoBehaviour
                 openMenuAndPauseGame();
             }
 
+        }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            if(!isInChat && !InventoryScript.getIsInUI())
+            {
+                openChat();
+            }
         }
 
 	}
@@ -65,5 +80,26 @@ public class CanvasScript : MonoBehaviour
     public void closeDeathScreen()
     {
         deathScreen.SetActive(false);
+    }
+
+    private void openChat()
+    {
+        isInChat = true;
+        InventoryScript.setIsInUI(true);
+		chat.SetActive(true);
+    }
+
+    public void closeChat()
+    {
+        isInChat = false;
+		InventoryScript.setIsInUI(false);
+		chat.SetActive(false);
+	}
+
+    public void sendChatMessage(string message)
+    {
+        if(chatMessage.activeSelf) chatMessage.SetActive(false);
+        chatMessage.SetActive(true);
+        chatMessageText.text = message;
     }
 }

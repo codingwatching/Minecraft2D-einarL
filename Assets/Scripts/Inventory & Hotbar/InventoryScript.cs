@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /**
@@ -17,6 +18,7 @@ public static class InventoryScript
 	private static InventorySlot itemsPickedUp = new InventorySlot(); // the items that the player has on his cursor in the inventory UI, ["", 0] if he hasnt picked up anything
 
 	private static InventorySlotScript[] inventorySlotScripts; // shows images of the item, hvertexture, picking up and putting down item in the invenotry
+	private static PlayerControllerScript playerControllerScript;
 
 	private static IDataService dataService = JsonDataService.Instance;
 
@@ -25,6 +27,7 @@ public static class InventoryScript
 		hotbarScript = GameObject.Find("Canvas").transform.Find("Hotbar").GetComponent<HotbarScript>();
 
 		inventorySlotScripts = new InventorySlotScript[inventorySlots];
+		playerControllerScript = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
 
 		Transform invPanel = GameObject.Find("Canvas").transform.Find("InventoryParent").Find("Inventory").Find("InventoryPanel");
 
@@ -300,6 +303,7 @@ public static class InventoryScript
 	public static void setIsInUI(bool value)
 	{
 		isInUI = value;
+		if(isInUI) playerControllerScript.removeAnimations();
 	}
 
 	public static bool getHasItemsPickedUp()
