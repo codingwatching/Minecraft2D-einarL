@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -55,7 +56,9 @@ public class PlayerControllerScript : MonoBehaviour
 	private bool isRunning = false;
 
     private bool creativeMode = false;
+
     private bool isFlying = false;
+    private float timeSpacebarPressed;
 
     private float horizontalMove = 0;
     // Start is called before the first frame update
@@ -87,6 +90,8 @@ public class PlayerControllerScript : MonoBehaviour
 		bubblebar = GameObject.Find("Canvas").transform.Find("Bubblebar").gameObject;
 		sleepScript = GameObject.Find("Canvas").transform.Find("SleepTint").GetComponent<SleepScript>();
 
+        timeSpacebarPressed = Time.time;
+
 		if (dataService.exists("player-position.json")) // if there is a saved player position, then teleport the player to that position
 		{
 			float[] playerPosition = dataService.loadData<float[]>("player-position.json");
@@ -106,14 +111,18 @@ public class PlayerControllerScript : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if (InventoryScript.getIsInUI() || anim.GetBool("isSleeping")) return; // if user is in the UI or if steve is sleeping, then we cant move
+        if (InventoryScript.getIsInUI() || anim.GetBool("isSleeping"))
+        {
+            if(isFlying) rb.velocity = Vector2.zero;
+            return; // if user is in the UI or if steve is sleeping, then we cant move
+        }
 		lookTowardsMouse();
         if (boatThatThePlayerIsIn != null) return;
 
 		horizontalMove = Input.GetAxisRaw("Horizontal"); // -1: left, 0: still, 1: right
 
         // jump
-		if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow) || (Input.GetKey(KeyCode.W) && !isOnLadder)) && isGrounded() && !isJumping && !isInAirAfterJumping && rb.velocity.y <= 0 && !isSwimming)
+		if ((Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow) || (Input.GetKey(KeyCode.W) && !isOnLadder)) && isGrounded() && !isJumping && !isInAirAfterJumping && rb.velocity.y <= 0 && !isSwimming && !isFlying)
         {
             isJumping = true;
             rb.velocity = new Vector2(rb.velocity.x * jumpBoost, jumpPower);
@@ -175,41 +184,100 @@ public class PlayerControllerScript : MonoBehaviour
             if(!isOnLadder && !isSwimming) checkIfTakeFallDamage();
         }
 
-        if (!isSwimming)
+
+        checkIfSwimming();
+
+		checkIfFlying();
+
+        checkIfRunning();
+	}
+    // checks if the player should start/stop flying
+    private void checkIfFlying() {
+		if (!creativeMode) return;
+		if (isFlying) flyingControls();
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if(isInWater())
+            float currentTime = Time.time;
+            if(currentTime - timeSpacebarPressed < 0.3f)
             {
-                toggleSwimmingPhysics();
+                if (isFlying) toggleFlying(false);
+                else toggleFlying();
             }
+            timeSpacebarPressed = currentTime;
         }
-        else if (!isInWater()) // if the player got out of the water
+    }
+
+    private void flyingControls()
+    {
+        if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.W))
         {
-            if (!isWaterBelowPlayer()) toggleSwimmingPhysics(false);
-            else
-            {
-                isSwimming = true;
+            rb.velocity = new Vector2(rb.velocity.x, speed);
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+			rb.velocity = new Vector2(rb.velocity.x, -speed);
+		}
+        else
+        {
+			rb.velocity = new Vector2(rb.velocity.x, 0);
+		}
+	}
+
+    private void toggleFlying(bool on = true)
+    {
+        isFlying = on;
+        if (on)
+        {
+            toggleSwimmingPhysics(false);
+            rb.gravityScale = 0; // no gravity
+            rb.velocity = Vector2.zero;
+            GetComponent<CapsuleCollider2D>().enabled = false;
+        }
+        else
+        {
+            rb.gravityScale = 5f;
+			GetComponent<CapsuleCollider2D>().enabled = true;
+		}
+    }
+
+    private void checkIfSwimming()
+    {
+        if (isFlying) return;
+
+		if (!isSwimming)
+		{
+			if (isInWater())
+			{
+				toggleSwimmingPhysics();
+			}
+		}
+		else if (!isInWater()) // if the player got out of the water
+		{
+			if (!isWaterBelowPlayer()) toggleSwimmingPhysics(false);
+			else
+			{
+				isSwimming = true;
 				rb.AddForce(new Vector2(0, -5));
 			}
 			fellFrom = transform.position.y;
 		}
-        else // if the player is swimming
-        {
-            swimmingControls();
-        }
+		else // if the player is swimming
+		{
+			swimmingControls();
+		}
 
-        if(!isUnderwater && checkIfUnderWater())
-        {
-            isUnderwater = true;
-            bubblebar.SetActive(true);
-        }
-        else if(isUnderwater && !checkIfUnderWater())
-        {
-            isUnderwater = false;
-            bubblebar.SetActive(false);
-        }
-
-
-        checkIfRunning();
+		if (creativeMode) return;
+		if (!isUnderwater && checkIfUnderWater())
+		{
+			isUnderwater = true;
+			bubblebar.SetActive(true);
+		}
+		else if (isUnderwater && !checkIfUnderWater())
+		{
+			isUnderwater = false;
+			bubblebar.SetActive(false);
+		}
 	}
 
     // checks if the players head is underwater
@@ -252,7 +320,8 @@ public class PlayerControllerScript : MonoBehaviour
         }
         else
         {
-            rb.gravityScale = 5;
+			rb.gravityScale = 5;
+
             rb.drag = 0;
 
 			walkSpeed = 6;
@@ -392,6 +461,7 @@ public class PlayerControllerScript : MonoBehaviour
 
 	private bool hasBlockInPath() // OverlapBox(Vector2 point, Vector2 size, float angle)
 	{
+        if (isFlying) return false;
         if(goingLeft()) return Physics2D.OverlapBox(new Vector2(blockNextToPlayerLeft.position.x, blockNextToPlayerLeft.position.y), new Vector2(0.1f,1.8f), 0, LayerMask.GetMask("Default") | LayerMask.GetMask("Tilemap"));
 		if(goingRight())return Physics2D.OverlapBox(new Vector2(blockNextToPlayerRight.position.x, blockNextToPlayerRight.position.y), new Vector2(0.1f, 1.8f), 0, LayerMask.GetMask("Default") | LayerMask.GetMask("Tilemap"));
         return false;
@@ -603,6 +673,16 @@ public class PlayerControllerScript : MonoBehaviour
         creativeMode = creative;
         healthbarScript.GetComponent<CanvasGroup>().alpha = creative ? 0 : 1;
 		hungerbarScript.GetComponent<CanvasGroup>().alpha = creative ? 0 : 1;
+        if (creative && isSwimming)
+        {
+            toggleSwimmingPhysics(false);
+			isUnderwater = false;
+			bubblebar.SetActive(false);
+		}
+        else if(!creative && isFlying)
+        {
+            toggleFlying(false);
+        }
 	}
 
     public bool isInCreativeMode()

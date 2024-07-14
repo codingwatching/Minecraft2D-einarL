@@ -23,7 +23,13 @@ public class ChatScript : MonoBehaviour
 	private void OnEnable()
 	{
         input.text = "";
-        input.ActivateInputField();
+        IEnumerator apparentlyThisHasToRunAFrameLaterToWork()
+        {
+            yield return null;
+			input.Select();
+            input.ActivateInputField();
+		}
+        StartCoroutine(apparentlyThisHasToRunAFrameLaterToWork());
 	}
 
 	// Update is called once per frame
@@ -41,19 +47,18 @@ public class ChatScript : MonoBehaviour
     {
         bool unknownCommand = true;
         string command = input.text.Trim().ToLower();
-        Debug.Log("run command: " + command);
 
         if(command.Equals("/c") || command.Equals("/creative"))
         {
-            Debug.Log("creative mode");
-            unknownCommand = false;
-            toggleCreativeMode();
+			unknownCommand = false;
+			if (playerControllerScript.isInCreativeMode()) canvasScript.sendChatMessage("You're already in creative mode");
+			else toggleCreativeMode();
         }
 		else if (command.Equals("/s") || command.Equals("/survival"))
 		{
-			Debug.Log("survival mode");
 			unknownCommand = false;
-			toggleCreativeMode(false);
+			if (!playerControllerScript.isInCreativeMode()) canvasScript.sendChatMessage("You're already in survival mode");
+			else toggleCreativeMode(false);
 		}
 
 		canvasScript.closeChat();

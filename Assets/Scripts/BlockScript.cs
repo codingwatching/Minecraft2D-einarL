@@ -97,13 +97,13 @@ public class BlockScript : MonoBehaviour, Interactable
      */
 	public void mineBlock(ToolInstance heldTool)
 	{
+		toolBreakingWith = heldTool;
 		if (playerControllerScript.isInCreativeMode()) { 
 			breakBlock();
 			return;
 		}
 
         isMining = true;
-		toolBreakingWith = heldTool;
 
 		// put break block GameObject (that has the animation) as a child of this block
 		animationObjectInstance = Instantiate(breakAnimationObject, gameObject.transform);

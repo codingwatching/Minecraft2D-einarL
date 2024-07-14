@@ -30,8 +30,9 @@ store chunks in region files, about 300 chunks or so in a region.
 
 breaking bed removes the spawnpoint
 
+lava, water in caves
 
 
-bones, lava, water in caves, unfreeze player when world has loaded
 
-save data every 5 min
+
+bones, save data every 5 min, unfreeze player when world has loaded, command for enabling xray, creative inventory
