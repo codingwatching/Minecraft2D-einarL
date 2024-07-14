@@ -12,6 +12,7 @@ public class RightClickBow : RightClickItemBehaviour
 	private Transform throwFromTransform;
 	private MainThreadDispatcher mainThreadDispatcher;
 	private Coroutine pointHandTowardsCursorCoroutine;
+	private PlayerControllerScript playerControllerScript;
 
 	private Transform playerTransform;
 	private Transform frontArm;
@@ -27,6 +28,7 @@ public class RightClickBow : RightClickItemBehaviour
 	public RightClickBow()
 	{
 		playerTransform = GameObject.Find("SteveContainer").transform;
+		playerControllerScript = playerTransform.GetComponent<PlayerControllerScript>();
 		frontArm = playerTransform.Find("Steve").Find("Arm Front Parent");
 		backArm = playerTransform.Find("Steve").Find("Arm Back Parent");
 		playerAnim = playerTransform.Find("Steve").GetComponent<Animator>();
@@ -43,7 +45,7 @@ public class RightClickBow : RightClickItemBehaviour
 
 	public override void rightClickItem()
 	{
-		if (!InventoryScript.hasArrow()) return;
+		if (!InventoryScript.hasArrow() && !playerControllerScript.isInCreativeMode()) return;
 		drawStartTime = Time.time;
 
 		IEnumerator pointHandTowardsCursor()
@@ -111,14 +113,14 @@ public class RightClickBow : RightClickItemBehaviour
 		}
 
 		if (!executeDefaultBehaviour) return;
-		if (!InventoryScript.hasArrow()) return;
+		if (!InventoryScript.hasArrow() && !playerControllerScript.isInCreativeMode()) return;
 
 		// shoot arrow
 		AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds\\Random\\bow"), throwFromTransform.position);
-		InventoryScript.removeArrow();
+		if(!playerControllerScript.isInCreativeMode()) InventoryScript.removeArrow();
 		ToolInstance bow = InventoryScript.getHeldTool();
 		if (bow != null) bow.reduceDurability();
-		else Debug.LogError("The player is no ToolInstance connected to this bow");
+		else Debug.LogError("There is no ToolInstance connected to this bow");
 
 		GameObject arrowPrefab = Resources.Load<GameObject>("Prefabs\\Throwables\\Arrow");
 		Vector2 playerPos = new Vector2(throwFromTransform.position.x, throwFromTransform.position.y + 0.5f); // the position where the arrow will be shot from

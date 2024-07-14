@@ -14,20 +14,35 @@ public class OpenInventoryScript : MonoBehaviour, IPointerClickHandler
 {
 
     private GameObject inventory;
+    private Transform inventorySlots; // the parent of the inventory slots
+	private Transform creativeInventorySlots; // the hotbar in the creative inventory
+	private GameObject creativeInventory;
     private GameObject darkBackground;
     private GameObject heldItemObject;
+    private Transform[] hotbarItems = new Transform[9];
     private bool isItemBeingHeld = false;
     private InventorySlot heldItem = new InventorySlot();
     private Slot hoveringOverSlotScript = null; // the script for the slot that the mouse is hovering over
+
+    private PlayerControllerScript playerControllerScript;
 
     // Start is called before the first frame update
     void Start()
     {
         inventory = transform.Find("Inventory").gameObject;
-        darkBackground = transform.Find("DarkBackground").gameObject;
+        inventorySlots = inventory.transform.Find("InventoryPanel").Find("InventorySlots");
+		creativeInventory = transform.Find("CreativeInventory").gameObject;
+        creativeInventorySlots = creativeInventory.transform.Find("CreativeInventoryPanel").Find("InventorySlots");
+		darkBackground = transform.Find("DarkBackground").gameObject;
+        for(int i = 0; i < hotbarItems.Length; i++)
+        {
+            hotbarItems[i] = inventorySlots.Find($"InventorySlot{i}");
+        }
+
         inventory.SetActive(false);
+        creativeInventory.SetActive(false);
         darkBackground.SetActive(false);
-        
+        playerControllerScript = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
 
 		heldItemObject = transform.Find("HeldItem").gameObject;
     }
@@ -37,10 +52,32 @@ public class OpenInventoryScript : MonoBehaviour, IPointerClickHandler
     {
         if (Input.GetKeyDown(KeyCode.E) || (Input.GetKeyDown(KeyCode.Escape) && InventoryScript.getIsInUI())) // open/close inventory
         {
-            if (!(!inventory.activeSelf && InventoryScript.getIsInUI())) // if player is not (trying to open inventory and there is already a UI open)
+            if (!(!(inventory.activeSelf || creativeInventory.activeSelf) && InventoryScript.getIsInUI())) // if player is not (trying to open inventory and there is already a UI open)
             {
-                bool isInInventory = !inventory.activeSelf;
-                inventory.SetActive(isInInventory);
+                bool isInInventory = !(inventory.activeSelf || creativeInventory.activeSelf);
+                if (playerControllerScript.isInCreativeMode())
+                {
+					creativeInventory.SetActive(isInInventory);
+                    if(isInInventory) // if player is opening the inventory then we need to move the hotbar from inventory to creativeInventory
+                    {
+                        foreach(Transform hotbarItem in hotbarItems)
+                        {
+                            hotbarItem.SetParent(creativeInventorySlots);
+                        }
+                    }
+                    else // otherwise we need to move the hotbar from creativeInventory to inventory
+                    {
+						foreach (Transform hotbarItem in hotbarItems)
+						{
+                            hotbarItem.SetParent(inventorySlots);
+						}
+					}
+                }
+                else
+                {
+					inventory.SetActive(isInInventory);
+				}
+                
                 darkBackground.SetActive(isInInventory);
                 InventoryScript.setIsInUI(isInInventory);
 

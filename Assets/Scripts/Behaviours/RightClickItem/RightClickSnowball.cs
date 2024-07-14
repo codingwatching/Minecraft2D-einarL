@@ -8,10 +8,12 @@ public class RightClickSnowball : RightClickItemBehaviour
 	private Animator anim;
 	private Transform throwFromTransform;
 	private MainThreadDispatcher mainThreadDispatcher;
+	private PlayerControllerScript playerControllerScript;
 
 	public RightClickSnowball()
 	{
 		anim = GameObject.Find("SteveContainer").transform.Find("Steve").GetComponent<Animator>();
+		playerControllerScript = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
 		throwFromTransform = GameObject.Find("SteveContainer").transform.Find("ThrowFromPosition").transform;
 		mainThreadDispatcher = GameObject.Find("EventSystem").GetComponent<MainThreadDispatcher>();
 	}
@@ -39,7 +41,7 @@ public class RightClickSnowball : RightClickItemBehaviour
 
 			rb.velocity = direction * throwForce;
 
-			InventoryScript.decrementSlot(theSlotThatTheSnowballIsIn); // remove the snowball from the inventory
+			if(!playerControllerScript.isInCreativeMode()) InventoryScript.decrementSlot(theSlotThatTheSnowballIsIn); // remove the snowball from the inventory
 		}
 		mainThreadDispatcher.startCoroutine(throwSnowball(InventoryScript.getSelectedSlot()));
 
