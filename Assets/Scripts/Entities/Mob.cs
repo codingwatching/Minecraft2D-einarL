@@ -84,6 +84,7 @@ public abstract class Mob : Entity
 
 	protected virtual void huntPlayer()
 	{
+		if(playerControllerScript.isInCreativeMode()) stopHunting();
 		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
 		if (canHurtPlayer() && isDamageCoroutineRunning == false)
 		{

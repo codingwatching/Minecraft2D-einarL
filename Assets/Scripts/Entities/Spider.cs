@@ -89,6 +89,7 @@ public class Spider : Mob
 
 	protected override void huntPlayer()
 	{
+		if (playerControllerScript.isInCreativeMode()) stopHunting();
 		float playerDistanceX = Mathf.Abs(playerTransform.position.x - transform.position.x);
 		float playerDistanceY = Mathf.Abs(playerTransform.position.y - transform.position.y);
 		if (canJumpTowardsPlayer() && isDamageCoroutineRunning == false)

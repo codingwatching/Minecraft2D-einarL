@@ -45,6 +45,7 @@ public class Skeleton : Mob
 
 	protected override void huntPlayer()
 	{
+		if (playerControllerScript.isInCreativeMode()) stopHunting();
 		if (isDamageCoroutineRunning == false && canHurtPlayer() && (isGrounded() || isSwimming))
 		{
 			damageCoroutine = StartCoroutine(damagePlayer());
