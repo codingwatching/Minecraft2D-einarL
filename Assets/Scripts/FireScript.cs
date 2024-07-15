@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class FireScript : MonoBehaviour
@@ -33,10 +34,13 @@ public class FireScript : MonoBehaviour
 		else SpawningChunkData.addOrRemoveFireBlock(transform.position.x, transform.position.y, 0, false);
 		if (burnParent)
 		{
+			
 			transform.parent.GetComponent<BlockScript>().checkSurroundingBlocks();
 			if (transform.parent.name.StartsWith("LeavesCherry")) transform.parent.GetComponent<CherryLeafScript>().runBeforeDestroyed();
 			SpawningChunkData.updateChunkData(transform.parent.position.x, transform.parent.position.y, 0, LayerMask.LayerToName(transform.parent.gameObject.layer));
-			Destroy(transform.parent.gameObject);
+
+			if (transform.parent.name.Equals("TNT")) transform.parent.GetComponent<TNTScript>().ignite();
+			else Destroy(transform.parent.gameObject);
 		}
 		else Destroy(gameObject);
     }
@@ -69,6 +73,7 @@ public class FireScript : MonoBehaviour
 						else
 						{
 							GameObject fireInstance = Instantiate(BlockHashtable.getBlockByID(66), firePos, Quaternion.identity);
+							if (!SpawningChunkData.lightingEnabled) fireInstance.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 							fireInstance.transform.parent = block.transform;
 
 							SpawningChunkData.addOrRemoveFireBlock(firePos.x, firePos.y, 0);
@@ -130,6 +135,7 @@ public class FireScript : MonoBehaviour
 			{
 				// Enable the "Fire" GameObject
 				fire.gameObject.SetActive(true);
+				if(!SpawningChunkData.lightingEnabled) fire.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 			}
 			else
 			{

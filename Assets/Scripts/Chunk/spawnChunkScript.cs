@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 using static Unity.Collections.AllocatorManager;
 
@@ -49,6 +50,7 @@ public class spawnChunkScript : MonoBehaviour
     private DayProcessScript dayProcessScript;
 	private MainThreadDispatcher mainThreadDispatcher;
 	private OpenFurnaceScript openFurnaceScript;
+	private PlayerControllerScript playerControllerScript;
 	private IDataService dataService = JsonDataService.Instance;
 
 	// Start is called before the first frame update
@@ -58,6 +60,7 @@ public class spawnChunkScript : MonoBehaviour
         dayProcessScript = GameObject.Find("CM vcam").transform.Find("SunAndMoonTexture").GetComponent<DayProcessScript>();
 		mainThreadDispatcher = GameObject.Find("EventSystem").GetComponent<MainThreadDispatcher>();
 		openFurnaceScript = GameObject.Find("Canvas").transform.Find("InventoryParent").GetComponent<OpenFurnaceScript>();
+		playerControllerScript = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
 
 		BlockHashtable.initializeBlockHashtable();
         decideBiome(); // TODO: dont do this if the biome is already decided, we need to save which biome was rendering when we quit the game
@@ -136,6 +139,8 @@ public class spawnChunkScript : MonoBehaviour
 		renderChunk(rendered + SpawningChunkData.blocksInChunk * 8);
 		renderChunk(rendered);
 		renderChunk(rendered + SpawningChunkData.blocksInChunk * 9);
+		
+		playerControllerScript.removeRBConstraints();
 	}
 
 	/**
@@ -503,7 +508,7 @@ public class spawnChunkScript : MonoBehaviour
 		foreach (float[] block in fireBlocks)
 		{
 			GameObject fireInstance = Instantiate(BlockHashtable.getBlockByID(66), new Vector2(block[0], block[1]), transform.rotation); // create block
-
+			if(!SpawningChunkData.lightingEnabled) fireInstance.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 			// put the fire as a child of a block
 			GameObject parentBlock = getBlock(new Vector2(block[0], block[1] - block[2]));
 			if (parentBlock != null)
@@ -669,10 +674,17 @@ public class spawnChunkScript : MonoBehaviour
 
 		if (blockID == 2) spawnedBlock.GetComponent<SpriteRenderer>().sprite = grassTexture; // grass block
 		else if (blockID == 28) spawnedBlock.GetComponent<SpriteRenderer>().sprite = snowyGrassTexture; // snowy grass block
-		else if (blockID == 21 && openFurnaceScript.isFurnaceOn(new Vector2(xPos, yPos))) {
-			spawnedBlock.GetComponent<SpriteRenderer>().sprite = furnaceOnTexture;
-			spawnedBlock.transform.Find("On").gameObject.SetActive(true);
-		} 
+		else if (blockID == 21) {
+			if(openFurnaceScript.isFurnaceOn(new Vector2(xPos, yPos)))
+			{
+				spawnedBlock.GetComponent<SpriteRenderer>().sprite = furnaceOnTexture;
+				spawnedBlock.transform.Find("On").gameObject.SetActive(true);
+			}
+			if (!SpawningChunkData.lightingEnabled) spawnedBlock.transform.Find("On").Find("Light 2D").GetComponent<Light2D>().enabled = false;
+		}
+		else if(!SpawningChunkData.lightingEnabled && blockID >= 24 && blockID <= 27) { // if torch && lighting disabled
+			spawnedBlock.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
+		}
 		spawnedBlock.layer = LayerMask.NameToLayer(layer);
 
         if (layer.Equals("BackBackground"))
@@ -695,6 +707,7 @@ public class spawnChunkScript : MonoBehaviour
 		}
 
 		if (layer.Equals("Water")) waterToFlow.Add(spawnedBlock.GetComponent<WaterScript>());
+		else if (layer.Equals("Fire") && !SpawningChunkData.lightingEnabled) spawnedBlock.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 
 	}
 	// returns the position of the tile, if the tile was set, otherwise Vector3Int(-100, -100)

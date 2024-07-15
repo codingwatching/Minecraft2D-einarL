@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 /**
@@ -150,10 +151,12 @@ public class PlaceBlockScript : MonoBehaviour
 
 		foreach (GameObject block in placedBlocks)
         {
+            Debug.Log(block.name);
 			// here we need to check if placedBlock is a special type of block which goes on the FrontBackground Layer
 			if (FrontBackgroundBlocks.isFrontBackgroundBlock(block.name)) // if its a "front background" block
 			{
 				block.layer = LayerMask.NameToLayer("FrontBackground");
+                if(!SpawningChunkData.lightingEnabled && block.name.StartsWith("Torch")) block.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 			}
             else if(block.layer < 13) // remove water if there is any at this position
             {
@@ -249,6 +252,11 @@ public class PlaceBlockScript : MonoBehaviour
         {
             InventoryScript.setSelectedSlotItem(new InventorySlot("Bucket"));
         }
+        else if (!SpawningChunkData.lightingEnabled && placedBlocks.Count > 0 && placedBlocks[0].name.Equals("Furnace"))
+        {
+            placedBlocks[0].transform.Find("On").Find("Light 2D").GetComponent<Light2D>().enabled = false;
+        }
+
 
 		playPlaceBlockAnimation();
 

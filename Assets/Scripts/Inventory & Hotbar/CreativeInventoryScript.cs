@@ -70,6 +70,7 @@ public class CreativeInventoryScript : MonoBehaviour
 
 	private void OnEnable()
 	{
+		slider.value = 0;
 		showItems(0);
 	}
 

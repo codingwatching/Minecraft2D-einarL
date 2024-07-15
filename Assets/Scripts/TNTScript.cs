@@ -20,7 +20,7 @@ public class TNTScript : MonoBehaviour
     public void ignite()
     {
 		if (gameObject.layer == LayerMask.NameToLayer("TNT")) return; // if already ignited, then return
-		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, 0);
+		SpawningChunkData.updateChunkData(transform.position.x, transform.position.y, 0, LayerMask.LayerToName(gameObject.layer));
 		Destroy(GetComponent<BlockScript>());
         gameObject.AddComponent<Rigidbody2D>();
 		AudioSource.PlayClipAtPoint(Resources.Load<AudioClip>("Sounds\\Random\\fuse"), transform.position);

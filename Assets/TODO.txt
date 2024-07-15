@@ -35,4 +35,5 @@ lava, water in caves
 
 
 
-bones, save data every 5 min, unfreeze player when world has loaded, command for enabling xray, creative inventory
+bones, save data every 5 min
+save tree data in json file

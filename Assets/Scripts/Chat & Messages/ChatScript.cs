@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class ChatScript : MonoBehaviour
 {
@@ -60,6 +61,16 @@ public class ChatScript : MonoBehaviour
 			if (!playerControllerScript.isInCreativeMode()) canvasScript.sendChatMessage("You're already in survival mode");
 			else toggleCreativeMode(false);
 		}
+        else if (command.Equals("/tl") || command.Equals("/togglelighting"))
+        {
+            unknownCommand = false;
+            bool enabled = SpawningChunkData.lightingEnabled;
+
+			if(enabled) canvasScript.sendChatMessage("Lighting disabled");
+            else canvasScript.sendChatMessage("Lighting enabled");
+			toggleLights(!enabled);
+            SpawningChunkData.lightingEnabled = !enabled;
+		}
 
 		canvasScript.closeChat();
         if (unknownCommand) canvasScript.sendChatMessage("Unknown command");
@@ -69,5 +80,16 @@ public class ChatScript : MonoBehaviour
     {
 		playerControllerScript.toggleCreativeMode(creative);
         armorCanvasGroup.alpha = creative ? 0 : 1;
+	}
+
+    private void toggleLights(bool enabled = true)
+    {
+		Light2D[] lights = FindObjectsOfType<Light2D>();
+
+		// Disable/enable each Light2D component
+		foreach (Light2D light in lights)
+		{
+			light.enabled = enabled;
+		}
 	}
 }

@@ -64,6 +64,7 @@ public class PlayerControllerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (rb != null) return;
         steve = transform.Find("Steve");
         holdingItemObject = steve.Find("Arm Front Parent").Find("Arm Front").transform.Find("HoldingItemPosition").transform.Find("HoldingItem");
 		holdingItemObjectSpriteRenderer = holdingItemObject.GetComponent<SpriteRenderer>();
@@ -100,12 +101,6 @@ public class PlayerControllerScript : MonoBehaviour
 		}
 
         rb.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation; // make the player not fall through blocks while the world is loading
-        IEnumerator removeRBConstraints()
-        {
-            yield return new WaitForSeconds(0.5f);
-			rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-		}
-        StartCoroutine(removeRBConstraints());
 	}
 
 	// Update is called once per frame
@@ -148,7 +143,7 @@ public class PlayerControllerScript : MonoBehaviour
         if(horizontalMove != 0 && !hasBlockInPath()) // moving left or right
 		{
             anim.SetBool("isWalking", true);
-            if(isGrounded()) stepSoundScript.playSound(blockBelowPlayer, isRunning); // make step sound
+            if(isGrounded() && !isFlying) stepSoundScript.playSound(blockBelowPlayer, isRunning); // make step sound
 		}
         else
         {
@@ -191,6 +186,13 @@ public class PlayerControllerScript : MonoBehaviour
 
         checkIfRunning();
 	}
+
+    public void removeRBConstraints()
+    {
+        if (rb == null) Start();
+		rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+	}
+
     // checks if the player should start/stop flying
     private void checkIfFlying() {
 		if (!creativeMode) return;

@@ -60,6 +60,7 @@ public class PlayerInventory : MonoBehaviour
         {
             anim.SetBool("isHoldingTorch", true);
             torchLight.SetActive(true);
+            if(!SpawningChunkData.lightingEnabled) torchLight.GetComponent<Light2D>().enabled = false;
         }
         else
         {

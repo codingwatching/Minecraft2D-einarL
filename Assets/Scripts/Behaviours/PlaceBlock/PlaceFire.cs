@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class PlaceFire : PlaceBlockBehaviour
@@ -29,6 +30,7 @@ public class PlaceFire : PlaceBlockBehaviour
 
 			GameObject fireInstance = GameObject.Instantiate(BlockHashtable.getBlockByID(66), blockToPlace.transform.position, Quaternion.identity);
 			fireInstance.transform.parent = block.transform;
+			if (!SpawningChunkData.lightingEnabled) fireInstance.transform.Find("Light 2D").GetComponent<Light2D>().enabled = false;
 
 			ToolInstance flintAndSteelTool = InventoryScript.getHeldTool();
 			if (flintAndSteelTool != null)

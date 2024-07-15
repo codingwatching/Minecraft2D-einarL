@@ -29,6 +29,8 @@ public static class SpawningChunkData
 	private static int leftMostChunkEdge = 0;
 	private static int rightMostChunkEdge = 0;
 
+	public static bool lightingEnabled { get; set; } = true;
+
 	/**
 	 * runs after the user places/breaks a block.
 	 * this function updates a chunk in the list "renderedChunks" with the new blockID. 
@@ -63,10 +65,12 @@ public static class SpawningChunkData
 
 	public static void addOrRemoveFireBlock(float x, float y, int fireAttachement, bool add = true)
 	{
-		ChunkData correspondingChunk = renderedChunks[xPosToChunkPos(x)];
+		ChunkData correspondingChunk = null;
+		int chunkPos = xPosToChunkPos(x);
+		if (renderedChunks.ContainsKey(chunkPos)) correspondingChunk = renderedChunks[chunkPos];
 		if (correspondingChunk == null)
 		{
-			Debug.LogError("Didn't find the chunk for a block at x position: " + x);
+			//Debug.LogError("Didn't find the chunk for a block at x position: " + x);
 			return;
 		}
 
