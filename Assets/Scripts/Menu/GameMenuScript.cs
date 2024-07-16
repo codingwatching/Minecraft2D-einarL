@@ -34,9 +34,12 @@ public class GameMenuScript : MonoBehaviour
 		canvasScript.closeMenuAndResumeGame(); // so that we unpause the game
 		GameObject.Find("Main Camera").GetComponent<SaveScript>().save(); // save 
         unrenderAndSaveChunks(); // save chunks
-        JsonDataService.Instance.resetWorldFolder(); // reset world folder so we can later play another world
+		ArmorOutfitScript.removeInstance(); // this singleton needs to be reset when we go to another world, so we will do this
+        if(!SpawningChunkData.lightingEnabled)GameObject.Find("Canvas").transform.Find("Chat").GetComponent<ChatScript>().toggleLights(true);
+        SpawnTreeScript.resetVariables();
+
+		JsonDataService.Instance.resetWorldFolder(); // reset world folder so we can later play another world
         SaveChunk.resetWorldFolder(); // reset world folder so we can later play another world
-        ArmorOutfitScript.removeInstance(); // this singleton needs to be reset when we go to another world, so we will do this
 		SceneManager.LoadScene("TitleScreen"); // go to title screen
     }
 

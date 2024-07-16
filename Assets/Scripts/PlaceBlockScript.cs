@@ -151,7 +151,6 @@ public class PlaceBlockScript : MonoBehaviour
 
 		foreach (GameObject block in placedBlocks)
         {
-            Debug.Log(block.name);
 			// here we need to check if placedBlock is a special type of block which goes on the FrontBackground Layer
 			if (FrontBackgroundBlocks.isFrontBackgroundBlock(block.name)) // if its a "front background" block
 			{

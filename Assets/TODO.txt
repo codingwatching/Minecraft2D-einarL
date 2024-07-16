@@ -36,4 +36,4 @@ lava, water in caves
 
 
 bones, save data every 5 min
-save tree data in json file
+save tree & biome data in json file

@@ -64,12 +64,7 @@ public class ChatScript : MonoBehaviour
         else if (command.Equals("/tl") || command.Equals("/togglelighting"))
         {
             unknownCommand = false;
-            bool enabled = SpawningChunkData.lightingEnabled;
-
-			if(enabled) canvasScript.sendChatMessage("Lighting disabled");
-            else canvasScript.sendChatMessage("Lighting enabled");
-			toggleLights(!enabled);
-            SpawningChunkData.lightingEnabled = !enabled;
+            toggleLights(!SpawningChunkData.lightingEnabled);
 		}
 
 		canvasScript.closeChat();
@@ -82,8 +77,12 @@ public class ChatScript : MonoBehaviour
         armorCanvasGroup.alpha = creative ? 0 : 1;
 	}
 
-    private void toggleLights(bool enabled = true)
+    public void toggleLights(bool enabled = true)
     {
+		if (!enabled) canvasScript.sendChatMessage("Lighting disabled");
+		else canvasScript.sendChatMessage("Lighting enabled");
+		SpawningChunkData.lightingEnabled = enabled;
+
 		Light2D[] lights = FindObjectsOfType<Light2D>();
 
 		// Disable/enable each Light2D component

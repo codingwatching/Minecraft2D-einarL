@@ -47,6 +47,19 @@ public static class SpawnTreeScript
 
 	private static System.Random random = new System.Random();
 
+	public static void initializeTreeData(object[] data)
+	{
+		treeProgressRight = Convert.ToInt32(data[4]);
+		treeProgressLeft = Convert.ToInt32(data[5]);
+		treeHeightRight = Convert.ToInt32(data[6]);
+		treeHeightLeft = Convert.ToInt32(data[7]);
+		bottomPosRight = Convert.ToSingle(data[8]);
+		bottomPosLeft = Convert.ToSingle(data[9]);
+
+		spawningTreeTypeLeftAndRight[0] = Convert.ToInt32(data[10]);
+		spawningTreeTypeLeftAndRight[1] = Convert.ToInt32(data[11]);
+	}
+
 	/**
 	 * decides if there should be a tree here, 
 	 * 
@@ -66,7 +79,6 @@ public static class SpawnTreeScript
 		{
 			int index = goingRight ? 1 : 0;
 			int process = goingRight ? treeProgressRight : treeProgressLeft;
-
 			// checks if the process is in the middle of the tree (where we spawn the logs), then we want to make the bottom position to be the ground position (instead of how high the tree is)
 			float bottomPos = treeIDToMiddleProgress[spawningTreeTypeLeftAndRight[index]] == process ? treeBottomYPos : (goingRight ? bottomPosRight : bottomPosLeft);
 
@@ -652,5 +664,19 @@ public static class SpawnTreeScript
 	{
 		if (goingRight) return treeProgressRight > 0;
 		return treeProgressLeft > 0;
+	}
+
+	public static object[] getTreeData()
+	{
+		return new object[] { treeProgressRight, treeProgressLeft, treeHeightRight, treeHeightLeft, bottomPosRight, bottomPosLeft, spawningTreeTypeLeftAndRight[0], spawningTreeTypeLeftAndRight[1] };
+	}
+
+	public static void resetVariables()
+	{
+		treeProgressRight = 0;
+		treeProgressLeft = 0;
+		treeHeightRight = 0;
+		treeHeightLeft = 0;
+		spawningTreeTypeLeftAndRight = new int[] { -1, -1 }; // which tree we are in the process of spawning
 	}
 }

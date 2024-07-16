@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
 /**
- * this script is responsible for saving inventory and furnaces (in the future: chests, unsaved chunks, etc.)
+ * this script is responsible for saving inventory and furnaces, etc.
  * this script is not used for saving chunks when unrendering/rendering them.
  * 
  */
@@ -19,6 +20,7 @@ public class SaveScript : MonoBehaviour
 	private ArmorScript armorScript;
 	private static IDataService dataService = JsonDataService.Instance;
 	private Transform steve;
+	private spawnChunkScript scScript;
 
 	// Start is called before the first frame update
 	void Start()
@@ -30,6 +32,7 @@ public class SaveScript : MonoBehaviour
 		dayProcessScript = GameObject.Find("CM vcam").transform.Find("SunAndMoonTexture").GetComponent<DayProcessScript>();
 		armorScript = GameObject.Find("Canvas").transform.Find("Armorbar").GetComponent<ArmorScript>();
 		steve = GameObject.Find("SteveContainer").transform;
+		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
 	}
 
     // Update is called once per frame
@@ -65,6 +68,16 @@ public class SaveScript : MonoBehaviour
 		if (!dataService.saveData("player-position.json", new float[] { steve.position.x, steve.position.y }))
 		{
 			Debug.LogError("Could not save player position :(");
+		}
+		// we'll save the data needed for world generation, which is the following:
+		// [chunk, nextChunk, prevChunk, chunkLength, treeProgressRight, treeProgressLeft, treeHeightRight, treeHeightLeft, bottomPosRight, bottomPosLeft, spawningTreeTypeLeft, spawningTreeTypeRight]
+		string chunk = scScript.spawnChunkStrategy?.biomeType;
+		string nextChunk = scScript.nextSpawnChunkStrategy?.biomeType;
+		string prevChunk = scScript.previousSpawnChunkStrategy?.biomeType;
+		object[] biomeData = new object[]{ chunk, nextChunk, prevChunk, scScript.biomeLength };
+		if(!dataService.saveData("world-data.json", biomeData.Concat(SpawnTreeScript.getTreeData()).ToArray()))
+		{
+			Debug.LogError("Could not save world data");
 		}
 	}
 }

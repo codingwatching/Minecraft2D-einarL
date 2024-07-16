@@ -63,8 +63,29 @@ public class spawnChunkScript : MonoBehaviour
 		playerControllerScript = GameObject.Find("SteveContainer").GetComponent<PlayerControllerScript>();
 
 		BlockHashtable.initializeBlockHashtable();
-        decideBiome(); // TODO: dont do this if the biome is already decided, we need to save which biome was rendering when we quit the game
-		biomes.Add(new Ocean()); // player cant spawn in an ocean, so we add it to the biome list after deciding the initial two biomes
+
+		if (!dataService.exists("world-data.json"))
+		{
+			decideBiome();
+			biomes.Add(new Ocean()); // player cant spawn in an ocean, so we add it to the biome list after deciding the initial two biomes
+		}
+		else
+		{
+			biomes.Add(new Ocean());
+			object[] biomeData = dataService.loadData<object[]>("world-data.json");
+			string currentBiome = biomeData[0]?.ToString();
+			string nextBiome = biomeData[1]?.ToString();
+			string prevBiome = biomeData[2]?.ToString();
+			if (currentBiome == null) decideBiome();
+			else
+			{
+				spawnChunkStrategy = biomes.Find(b => b.biomeType.Equals(currentBiome));
+				nextSpawnChunkStrategy = biomes.Find(b => b.biomeType.Equals(nextBiome));
+				previousSpawnChunkStrategy = biomes.Find(b => b.biomeType.Equals(prevBiome));
+				biomeLength = Convert.ToInt32(biomeData[3]);
+			}
+			SpawnTreeScript.initializeTreeData(biomeData);
+		}
 
 		chunkSize = (int)(SpawningChunkData.blockSize * SpawningChunkData.blocksInChunk);
         SpawningChunkData.setRightMostY(defaultStartSpawnY);

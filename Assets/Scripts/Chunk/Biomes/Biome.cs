@@ -17,7 +17,7 @@ public abstract class Biome
 	public int highestStartSpawnY = 20;
 	public int lowestStartSpawnY = -15;
 	public int[] biomeLength = new int[] { 5, 30 }; // min and max biome length, in chunks; (both inclusive)
-	protected string biomeType = "Plains";
+	public string biomeType { get; protected set; } = "Plains";
 	public int topBlockID { get; protected set; } = 2;
 	public int secondBlockID { get; protected set; } = 1;
 

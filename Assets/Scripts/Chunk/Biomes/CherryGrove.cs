@@ -9,7 +9,7 @@ public class CherryGrove : Biome
 
 	public CherryGrove() : base()
 	{
-
+		biomeType = "CherryGrove";
 	}
 
 	/**
