@@ -33,9 +33,11 @@ public class SaveScript : MonoBehaviour
 		armorScript = GameObject.Find("Canvas").transform.Find("Armorbar").GetComponent<ArmorScript>();
 		steve = GameObject.Find("SteveContainer").transform;
 		scScript = GameObject.Find("Main Camera").GetComponent<spawnChunkScript>();
+		StartCoroutine(saveCoroutine());
 	}
 
     // Update is called once per frame
+	/*
     void Update()
     {
 		if (Input.GetKeyDown(KeyCode.I))
@@ -43,6 +45,16 @@ public class SaveScript : MonoBehaviour
 			save();
 		}
 	}
+	*/
+
+	private IEnumerator saveCoroutine()
+	{
+		while (true) {
+			yield return new WaitForSeconds(5 * 60); // save every 5 min
+			save();
+		}
+	}
+
 
 	// saves everything except the chunks
 	public void save()

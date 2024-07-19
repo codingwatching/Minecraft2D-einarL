@@ -38,6 +38,9 @@ public class PlaceBlockScript : MonoBehaviour
     private Transform torso;
     private PlayerControllerScript playerControllerScript;
 
+	private IDataService dataService = JsonDataService.Instance;
+    private bool showPlaceTip = false;
+
 	void Awake()
 	{
 		BlockBehaviourData.initializeHashtables();
@@ -54,6 +57,8 @@ public class PlaceBlockScript : MonoBehaviour
         backgroundVisualTiles = GameObject.Find("Grid").transform.Find("BackgroundVisualTiles").GetComponent<Tilemap>();
         placeBlockAudioSource = GameObject.Find("Audio").transform.Find("BreakBlockSound").GetComponent<AudioSource>();
 		playerControllerScript = transform.parent.GetComponent<PlayerControllerScript>();
+
+		if (!dataService.exists("inventory.json")) showPlaceTip = true;
 	}
 
     // Update is called once per frame
@@ -148,6 +153,11 @@ public class PlaceBlockScript : MonoBehaviour
 		List<GameObject> placedBlocks = placeBlock();
 
         if (holdingItem != null && !holdingItem.name.Equals("Fire")) removeFire();
+        if (showPlaceTip)
+        {
+            GameObject.Find("Canvas").GetComponent<TipScript>()?.showBackgroundPlaceTip();
+            showPlaceTip = false;
+		}
 
 		foreach (GameObject block in placedBlocks)
         {

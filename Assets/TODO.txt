@@ -32,8 +32,4 @@ breaking bed removes the spawnpoint
 
 lava, water in caves
 
-
-
-
-bones, save data every 5 min
-save tree & biome data in json file
+bones
