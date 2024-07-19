@@ -11,6 +11,8 @@ public class OptionsScript : MonoBehaviour
     private Slider musicVolumeSlider;
 	private TextMeshProUGUI stepsVolumeText;
 	private Slider stepsVolumeSlider;
+	private TextMeshProUGUI blocksVolumeText;
+	private Slider blocksVolumeSlider;
 
 	private JsonDataService jsonDataService = JsonDataService.Instance;
     private OptionsManager optionsManager = OptionsManager.Instance;
@@ -24,6 +26,9 @@ public class OptionsScript : MonoBehaviour
 		stepsVolumeText = transform.Find("OptionsScreen").Find("StepsSlider").Find("StepsSliderText").GetComponent<TextMeshProUGUI>();
 		stepsVolumeSlider = transform.Find("OptionsScreen").Find("StepsSlider").GetComponent<Slider>();
 
+		blocksVolumeText = transform.Find("OptionsScreen").Find("BlocksSlider").Find("BlocksSliderText").GetComponent<TextMeshProUGUI>();
+		blocksVolumeSlider = transform.Find("OptionsScreen").Find("BlocksSlider").GetComponent<Slider>();
+
 		loadOptions();
 	}
 
@@ -35,7 +40,9 @@ public class OptionsScript : MonoBehaviour
 
         musicVolumeSlider.value = options[0];
         stepsVolumeSlider.value = options[1];
-    }
+        blocksVolumeSlider.value = options[2];
+
+	}
 
     // Update is called once per frame
     void Update()
@@ -58,6 +65,12 @@ public class OptionsScript : MonoBehaviour
 		optionsManager.setStepsVolume(stepsVolumeSlider.value / 100f);
 	}
 
+	public void onChangeBlocksSlider()
+	{
+		blocksVolumeText.text = $"Blocks: {blocksVolumeSlider.value}%";
+		optionsManager.setBlocksVolume(blocksVolumeSlider.value / 100f);
+	}
+
 	/**
      * runs when the user exits the options menu
      * 
@@ -66,7 +79,7 @@ public class OptionsScript : MonoBehaviour
      */
 	public void done()
     {
-        jsonDataService.saveData("options.json",new int[] { (int)musicVolumeSlider.value, (int)stepsVolumeSlider.value }, true);
+        jsonDataService.saveData("options.json",new int[] { (int)musicVolumeSlider.value, (int)stepsVolumeSlider.value, (int)blocksVolumeSlider.value }, true);
         optionsManager.setOptions();
 
         // go to previous scene

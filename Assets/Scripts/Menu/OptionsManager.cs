@@ -26,7 +26,9 @@ public class OptionsManager
 
 	private AudioSource musicAudioSource;
 	private AudioSource stepsAudioSource;
-	private int[] options; // [ musicVolume, stepsVolume ]
+	private AudioSource blocksAudioSourceDig;
+	private AudioSource blocksAudioSourceBreak;
+	private int[] options; // [ musicVolume, stepsVolume, blocksVolume ]
 
 	private OptionsManager()
 	{
@@ -50,6 +52,17 @@ public class OptionsManager
 		if (options != null) stepsAudioSource.volume = options[1] / 100f;
 	}
 
+	public void initializeBlocksVolume(AudioSource blocksAudioSourceDig, AudioSource blocksAudioSourceBreak)
+	{
+		this.blocksAudioSourceDig = blocksAudioSourceDig;
+		this.blocksAudioSourceBreak = blocksAudioSourceBreak;
+		if (options != null)
+		{
+			blocksAudioSourceDig.volume = options[2] / 100f;
+			blocksAudioSourceBreak.volume = options[2] / 100f;
+		}
+	}
+
 	public void setMusicVolume(float volume)
 	{
 		musicAudioSource.volume = volume;
@@ -61,6 +74,11 @@ public class OptionsManager
 		stepsAudioSource.volume = volume;
 	}
 
-
+	public void setBlocksVolume(float volume)
+	{
+		if (blocksAudioSourceDig == null) return;
+		blocksAudioSourceDig.volume = volume;
+		blocksAudioSourceBreak.volume = volume;
+	}
 
 }

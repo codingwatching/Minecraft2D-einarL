@@ -48,6 +48,8 @@ public class BlockScript : MonoBehaviour, Interactable
 		mineBlockAudioSource.pitch = audioSpeed;
 
 		breakBlockAudioSource = audioParent.Find("BreakBlockSound").GetComponent<AudioSource>();
+
+		OptionsManager.Instance.initializeBlocksVolume(mineBlockAudioSource, breakBlockAudioSource);
 	}
 
     // Update is called once per frame
