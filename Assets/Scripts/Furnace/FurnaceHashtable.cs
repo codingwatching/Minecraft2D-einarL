@@ -12,8 +12,10 @@ public static class FurnaceHashtable
 		{"Charcoal", 7.96f }, // 8 items worth
 		{"PlankOak", 3.85f }, // 4 items worth
 		{"PlankSpruce", 3.85f },
+		{"PlankCherry", 3.85f },
 		{"LogOak", 5.77f }, // 6 items worth
 		{"LogSpruce", 5.77f },
+		{"LogCherry", 5.77f },
 		{"CraftingTable", 5.77f},
 		{"Stick", 1.93f}, // 2 items worth
 		{"WoodAxe", 5.77f},
@@ -26,6 +28,7 @@ public static class FurnaceHashtable
 	private static Hashtable furnaceItems = new Hashtable() {
 		{ "LogOak", "Charcoal"}, // {item that burns, the result item}
 		{ "LogSpruce", "Charcoal"},
+		{ "LogCherry", "Charcoal"},
 		{ "Cobblestone", "Stone"},
 		{ "MuttonRaw", "MuttonCooked"},
 		{ "PorkchopRaw", "PorkchopCooked"},
